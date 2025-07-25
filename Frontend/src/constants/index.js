@@ -27,7 +27,7 @@ import {
   intelligence,
   sun,
   payment,
-  intelligence2,
+  // intelligence2,
   rental,
   REGex2,
   music,
