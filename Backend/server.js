@@ -4,10 +4,18 @@ const app = express()
 const mongoose = require('mongoose')
 const cors = require('cors')
 const port = process.env.PORT
+const fileUpload = require("express-fileupload");
 const scheduleVisitorReset = require("./Cron/VisitorsReset");
 
 app.use(express.json())
 app.use(cors())
+app.use(fileUpload({ useTempFiles: false, }));
+// app.use(
+//   fileUpload({
+//     useTempFiles: false, 
+//     limits: { fileSize: 10 * 1024 * 1024 }, 
+//   })
+// );
 
 const MongoUrl = process.env.MONGOURL
 
@@ -17,9 +25,11 @@ mongoose.connect(MongoUrl)
 
 const visitors = require('./Router/VisitorRoutes')
 const userroute = require('./Router/UserRouter')
+const projectroute = require('./Router/ProjectRouter')
 
 app.use('/visitor', visitors)
 app.use('/user', userroute)
+app.use('/projects', projectroute)
 
 scheduleVisitorReset();
 
