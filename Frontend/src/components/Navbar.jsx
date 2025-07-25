@@ -387,6 +387,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { klogo } from "../assets";
 import { Menu, X } from "lucide-react";
+import baseurl from "./BaseUrl";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -408,7 +409,8 @@ const Navbar = () => {
 
   const fetchCounts = async () => {
     try {
-      const response = await axios.get("http://localhost:5678/visitor/track");
+      // const response = await axios.get(`http://localhost:5678/visitor/track`);
+      const response = await axios.get(`${baseurl}visitor/track`);
       const { todayCount, totalCount } = response.data;
       setTodayCount(todayCount);
       setTotalCount(totalCount);
@@ -421,10 +423,16 @@ const Navbar = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5678/user/login", {
-        email,
-        password,
-      });
+      // const response = await axios.post("http://localhost:5678/user/login", {
+      //   email,
+      //   password,
+      // });
+
+      const response = await axios.post(`${baseurl}user/login`, {
+  email,
+  password,
+});
+
 
       const { user, message } = response.data;
 
