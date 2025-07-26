@@ -26,7 +26,6 @@ const Navbar = () => {
 
   const fetchCounts = async () => {
     try {
-      // const response = await axios.get(`http://localhost:5678/visitor/track`);
       const response = await axios.get(`${baseurl}visitor/track`);
       const { todayCount, totalCount } = response.data;
       setTodayCount(todayCount);

@@ -3,7 +3,13 @@ const Counter = require("../Model/Counter");
 const moment = require("moment");
 
 exports.trackVisitor = async (req, res) => {
-  const ip = req.ip || req.connection.remoteAddress;
+  // const ip = req.ip || req.connection.remoteAddress;
+
+  const ip =
+  req.headers["x-forwarded-for"]?.split(",")[0] || 
+  req.connection.remoteAddress || 
+  req.ip;
+
   const today = moment().format("YYYY-MM-DD");
 
   try {
