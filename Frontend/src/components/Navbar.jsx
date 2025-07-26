@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { klogo } from "../assets";
+// import { klogo } from "../assets";
 import { Menu, X } from "lucide-react";
 import baseurl from "./BaseUrl";
 
@@ -88,7 +88,7 @@ const Navbar = () => {
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => !isLoggedIn && setShowLogin(true)}
         >
-          <img src={klogo} alt="logo" className="w-9 h-9 object-contain" />
+          {/* <img src={klogo} alt="logo" className="w-9 h-9 object-contain" /> */}
           <p className="text-lg sm:text-xl font-bold">
             KK Tiwari <span className="hidden sm:inline">| Full-Stack Developer</span>
           </p>
