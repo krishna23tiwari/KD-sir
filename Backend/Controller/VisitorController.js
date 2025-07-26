@@ -125,6 +125,10 @@ exports.trackVisitor = async (req, res) => {
   requestIp.getClientIp(req) ||
   "Unknown";
 
+  console.log("🟡 Headers:", req.headers);
+console.log("🟡 IP Detected:", ip);
+
+
 console.log("Visitor IP:", ip);
 
   const today = moment().format("YYYY-MM-DD");

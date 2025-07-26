@@ -1,6 +1,10 @@
 const axios = require("axios");
 
 const getLocationFromIP = async (ip) => {
+    
+     if (!ip || ip === "::1" || ip === "127.0.0.1") {
+    return {};
+  }
   try {
     const { data } = await axios.get(`http://ip-api.com/json/${ip}`);
     if (data.status === "success") {

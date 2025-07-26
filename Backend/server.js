@@ -12,6 +12,8 @@ app.use(express.json())
 app.use(cors())
 app.use(fileUpload({ useTempFiles: false, }));
 app.use(requestIp.mw());
+app.set('trust proxy', true);
+
 // app.use(
 //   fileUpload({
 //     useTempFiles: false, 
