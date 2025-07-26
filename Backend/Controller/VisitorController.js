@@ -116,7 +116,17 @@ const { getLocationFromIP } = require("../Utility/ipLocation");
 // };
 
 exports.trackVisitor = async (req, res) => {
-  const ip = requestIp.getClientIp(req) || req.ip || req.connection.remoteAddress || "Unknown";
+  // const ip = requestIp.getClientIp(req) || req.ip || req.connection.remoteAddress || "Unknown";
+
+  const ip =
+  req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
+  req.connection?.remoteAddress ||
+  req.socket?.remoteAddress ||
+  requestIp.getClientIp(req) ||
+  "Unknown";
+
+console.log("Visitor IP:", ip);
+
   const today = moment().format("YYYY-MM-DD");
 
   try {
