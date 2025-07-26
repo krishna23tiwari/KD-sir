@@ -34,13 +34,33 @@
 // module.exports = mongoose.model("Visitor", VisitorSchema);
 
 
+// const mongoose = require("mongoose");
+
+// const visitorSchema = new mongoose.Schema({
+//   ip: String,
+//   date: String,
+//   location: String,
+// },{timestamps: true, versionKey: false});
+
+// module.exports = mongoose.model("Visitor", visitorSchema);
+
+
+// models/Visitor.js
 const mongoose = require("mongoose");
 
 const visitorSchema = new mongoose.Schema({
   ip: String,
   date: String,
-  location: String,
-},{timestamps: true, versionKey: false});
+  location: {
+    country: String,
+    region: String,
+    city: String,
+    isp: String,
+    lat: Number,
+    lon: Number,
+  },
+}, { timestamps: true, versionKey: false });
 
 module.exports = mongoose.model("Visitor", visitorSchema);
+
 
