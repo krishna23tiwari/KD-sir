@@ -39,7 +39,7 @@ import REGex2 from "./REGex2.png";
 import music from "./music.png";
 import taskManagment from "./taskManagment.png";
 import hotelManagment from "./hotelManagment.jpg";
-// import klogo from "./klogo.avif";
+import klogo from "./klogo.avif";
 
 export {
   logo,
@@ -79,6 +79,6 @@ export {
   REGex2,   
   music,
   taskManagment,
-  // klogo,
+  klogo,
   hotelManagment,
 };
