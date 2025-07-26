@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
 const cors = require('cors')
+const requestIp = require("request-ip");
 const port = process.env.PORT
 const fileUpload = require("express-fileupload");
 const scheduleVisitorReset = require("./Cron/VisitorsReset");
@@ -10,6 +11,7 @@ const scheduleVisitorReset = require("./Cron/VisitorsReset");
 app.use(express.json())
 app.use(cors())
 app.use(fileUpload({ useTempFiles: false, }));
+app.use(requestIp.mw());
 // app.use(
 //   fileUpload({
 //     useTempFiles: false, 
