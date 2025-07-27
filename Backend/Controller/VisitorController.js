@@ -115,56 +115,117 @@ const { getLocationFromIP } = require("../Utility/ipLocation");
 //   }
 // };
 
+// exports.trackVisitor = async (req, res) => {
+//   // const ip = requestIp.getClientIp(req) || req.ip || req.connection.remoteAddress || "Unknown";
+
+//   const ip =
+//   req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
+//   req.connection?.remoteAddress ||
+//   req.socket?.remoteAddress ||
+//   requestIp.getClientIp(req) ||
+//   "Unknown";
+
+//   console.log("🟡 Headers:", req.headers);
+// console.log("🟡 IP Detected:", ip);
+
+
+// console.log("Visitor IP:", ip);
+
+//   const today = moment().format("YYYY-MM-DD");
+
+//   try {
+//     const existingVisitor = await Visitor.findOne({ ip, date: today });
+//     let counter = await Counter.findOne({ date: today });
+
+//     if (!counter) {
+//       const lastCounter = await Counter.findOne().sort({ _id: -1 });
+//       const totalCount = lastCounter?.totalCount || 0;
+
+//       counter = await Counter.create({
+//         date: today,
+//         todayCount: 1,
+//         totalCount: totalCount + 1,
+//       });
+
+//       const location = await getLocationFromIP(ip);
+//       await Visitor.create({ ip, date: today, location });
+//     } else if (!existingVisitor) {
+//       const location = await getLocationFromIP(ip);
+//       await Visitor.create({ ip, date: today, location });
+
+//       counter.todayCount += 1;
+//       counter.totalCount += 1;
+//       await counter.save();
+//     }
+
+//     res.status(200).json({
+//       todayCount: counter.todayCount,
+//       totalCount: counter.totalCount,
+//     });
+//   } catch (err) {
+//     console.error("❌ TrackVisitor error:", err.message);
+//     console.error(err.stack);
+//     res.status(500).json({ message: "Server error", error: err.message });
+//   }
+// };
+
+
 exports.trackVisitor = async (req, res) => {
-  // const ip = requestIp.getClientIp(req) || req.ip || req.connection.remoteAddress || "Unknown";
+  const fingerprint = req.body.fingerprint;
 
   const ip =
-  req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
-  req.connection?.remoteAddress ||
-  req.socket?.remoteAddress ||
-  requestIp.getClientIp(req) ||
-  "Unknown";
-
-  console.log("🟡 Headers:", req.headers);
-console.log("🟡 IP Detected:", ip);
-
-
-console.log("Visitor IP:", ip);
+    req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
+    req.connection?.remoteAddress ||
+    req.socket?.remoteAddress ||
+    requestIp.getClientIp(req) ||
+    "Unknown";
 
   const today = moment().format("YYYY-MM-DD");
 
   try {
-    const existingVisitor = await Visitor.findOne({ ip, date: today });
     let counter = await Counter.findOne({ date: today });
 
-    if (!counter) {
-      const lastCounter = await Counter.findOne().sort({ _id: -1 });
-      const totalCount = lastCounter?.totalCount || 0;
+    const existingVisitor = await Visitor.findOne({
+      $or: [
+        { ip, date: today },
+        { fingerprint, date: today },
+      ],
+    });
 
-      counter = await Counter.create({
+    if (!existingVisitor) {
+      // New visitor today
+      const location = await getLocationFromIP(ip);
+
+      await Visitor.create({
+        ip,
+        fingerprint: fingerprint || null,
         date: today,
-        todayCount: 1,
-        totalCount: totalCount + 1,
+        location,
       });
 
-      const location = await getLocationFromIP(ip);
-      await Visitor.create({ ip, date: today, location });
-    } else if (!existingVisitor) {
-      const location = await getLocationFromIP(ip);
-      await Visitor.create({ ip, date: today, location });
+      if (!counter) {
+        // First visitor today
+        const lastCounter = await Counter.findOne().sort({ _id: -1 });
+        const totalCount = lastCounter?.totalCount || 0;
 
-      counter.todayCount += 1;
-      counter.totalCount += 1;
-      await counter.save();
+        counter = await Counter.create({
+          date: today,
+          todayCount: 1,
+          totalCount: totalCount + 1,
+        });
+      } else {
+        counter.todayCount += 1;
+        counter.totalCount += 1;
+        await counter.save();
+      }
     }
 
-    res.status(200).json({
-      todayCount: counter.todayCount,
-      totalCount: counter.totalCount,
-    });
+    const todayCount = counter?.todayCount || 0;
+    const totalCount = counter?.totalCount || 0;
+
+    res.status(200).json({ todayCount, totalCount });
   } catch (err) {
     console.error("❌ TrackVisitor error:", err.message);
-    console.error(err.stack);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };

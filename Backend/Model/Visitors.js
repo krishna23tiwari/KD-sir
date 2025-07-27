@@ -50,6 +50,7 @@ const mongoose = require("mongoose");
 
 const visitorSchema = new mongoose.Schema({
   ip: String,
+  fingerprint: String,
   date: String,
   location: {
     country: String,

@@ -9,7 +9,12 @@ const scheduleVisitorReset = () => {
     } catch (error) {
       console.error("❌ Failed to reset visitor IPs:", error);
     }
-  });
+  },
+   {
+      timezone: "Asia/Kolkata", // Set timezone to IST
+    }
+
+);
 };
 
 module.exports = scheduleVisitorReset;

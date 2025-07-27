@@ -5,6 +5,7 @@ import axios from "axios";
 // import { klogo } from "../assets";
 import { Menu, X } from "lucide-react";
 import baseurl from "./BaseUrl";
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -24,18 +25,38 @@ const Navbar = () => {
     }
   }, []);
 
-  const fetchCounts = async () => {
-    try {
-      const response = await axios.get(`${baseurl}visitor/track`);
-      const { todayCount, totalCount } = response.data;
-      setTodayCount(todayCount);
-      setTotalCount(totalCount);
-    } catch (err) {
-      console.error("Error fetching count data:", err);
-      alert("Failed to load visitor counts.");
-    }
-  };
+  // const fetchCounts = async () => {
+  //   try {
+  //     const response = await axios.get(`${baseurl}visitor/track`);
+  //     const { todayCount, totalCount } = response.data;
+  //     setTodayCount(todayCount);
+  //     setTotalCount(totalCount);
+  //   } catch (err) {
+  //     console.error("Error fetching count data:", err);
+  //     alert("Failed to load visitor counts.");
+  //   }
+  // };
 
+  const fetchCounts = async () => {
+  try {
+    // Load the fingerprinting library and get the unique visitor ID
+    const fp = await FingerprintJS.load();
+    const result = await fp.get();
+    const visitorId = result.visitorId;
+
+    // Send fingerprint to backend for tracking
+    const response = await axios.post(`${baseurl}visitor/track`, {
+      fingerprint: visitorId,
+    });
+
+    const { todayCount, totalCount } = response.data;
+    setTodayCount(todayCount);
+    setTotalCount(totalCount);
+  } catch (err) {
+    console.error("Error fetching count data:", err);
+    alert("Failed to load visitor counts.");
+  }
+};
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
