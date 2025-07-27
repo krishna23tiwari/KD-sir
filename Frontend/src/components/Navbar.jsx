@@ -37,16 +37,14 @@ const Navbar = () => {
   //   }
   // };
 
-  const fetchCounts = async () => {
+ const fetchCounts = async () => {
   try {
-    // Load the fingerprinting library and get the unique visitor ID
     const fp = await FingerprintJS.load();
     const result = await fp.get();
-    const visitorId = result.visitorId;
+    const fingerprint = result.visitorId;
 
-    // Send fingerprint to backend for tracking
     const response = await axios.post(`${baseurl}visitor/track`, {
-      fingerprint: visitorId,
+      fingerprint,
     });
 
     const { todayCount, totalCount } = response.data;
