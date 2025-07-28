@@ -16,6 +16,7 @@ const Navbar = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [counts, setCounts] = useState({ todayCount: 0, totalCount: 0 });
+  
 
     const getAuthHeaders = () => {
     const token = localStorage.getItem("token");
@@ -66,6 +67,8 @@ const trackVisitor = async () => {
 
 
       const { token,user, message } = response.data;
+      console.log("Received token from server:", token);
+    
 
       if (user.role === "admin") {
         setIsLoggedIn(true);
@@ -85,6 +88,8 @@ const trackVisitor = async () => {
       alert(error?.response?.data?.message || "Login failed.");
     }
   };
+
+  console.log(`>>>token>>>`, token)
 
   const handleLogout = () => {
     setIsLoggedIn(false);

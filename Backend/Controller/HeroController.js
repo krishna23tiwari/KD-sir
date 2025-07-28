@@ -3,8 +3,10 @@ const HeroText = require("../Model/HeroTextMoel");
 exports.getHeroText = async (req, res) => {
   try {
     const data = await HeroText.findOne();
+    console.log("Hero data:", data);
     res.json(data);
   } catch (err) {
+    console.error("Error fetching:", err);
     res.status(500).json({ message: "Failed to fetch hero text" });
   }
 };

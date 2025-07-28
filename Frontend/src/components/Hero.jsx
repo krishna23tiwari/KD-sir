@@ -279,10 +279,7 @@ import { styles } from "../styles";
 import { ComputersCanvas } from "./canvas";
 import baseurl from "./BaseUrl";
 
-const getAuthHeaders = () => {
-  const token = localStorage.getItem("token");
-  return { headers: { Authorization: `Bearer ${token}` } };
-};
+
 
 const Hero = () => {
   const [titles, setTitles] = useState([]);
@@ -291,6 +288,11 @@ const Hero = () => {
   const [inputSubheading, setInputSubheading] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [showEditor, setShowEditor] = useState(false); // 👈 NEW
+
+  const getAuthHeaders = () => {
+  const token = localStorage.getItem("token");
+  return { headers: { Authorization: `Bearer ${token}` } };
+};
 
   useEffect(() => {
     const isAdminStored = localStorage.getItem("adminLoggedIn");
