@@ -17,8 +17,12 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [counts, setCounts] = useState({ todayCount: 0, totalCount: 0 });
 
+    const getAuthHeaders = () => {
+    const token = localStorage.getItem("token");
+    return { headers: { Authorization: `Bearer ${token}` } };
+  };
 
-  // 🔁 Load login status on first render
+
   useEffect(() => {
     const storedUser = localStorage.getItem("adminLoggedIn");
     trackVisitor();
@@ -28,41 +32,11 @@ const Navbar = () => {
     }
   }, []);
 
-  // const fetchCounts = async () => {
-  //   try {
-  //     const response = await axios.get(`${baseurl}visitor/track`);
-  //     const { todayCount, totalCount } = response.data;
-  //     setTodayCount(todayCount);
-  //     setTotalCount(totalCount);
-  //   } catch (err) {
-  //     console.error("Error fetching count data:", err);
-  //     alert("Failed to load visitor counts.");
-  //   }
-  // };
-
-//  const fetchCounts = async () => {
-//   try {
-//     const fp = await FingerprintJS.load();
-//     const result = await fp.get();
-//     const fingerprint = result.visitorId;
-
-//     const response = await axios.post(`${baseurl}visitor/track`, {
-//       fingerprint,
-//     });
-
-//     const { todayCount, totalCount } = response.data;
-//     setTodayCount(todayCount);
-//     setTotalCount(totalCount);
-//   } catch (err) {
-//     console.error("Error fetching count data:", err);
-//     alert("Failed to load visitor counts.");
-//   }
-// };
 
 
 const fetchCounts = async () => {
   try {
-    const response = await axios.get(`${baseurl}visitor/counts`);
+    const response = await axios.get(`${baseurl}visitor/counts`, getAuthHeaders());
     setCounts(response.data);
   } catch (err) {
     console.error("Error fetching counts:", err);
@@ -75,7 +49,7 @@ const trackVisitor = async () => {
     const result = await fp.get();
     const fingerprint = result.visitorId;
 
-    await axios.post(`${baseurl}visitor/track`, { fingerprint });
+    await axios.post(`${baseurl}visitor/track`, { fingerprint }, getAuthHeaders());
   } catch (err) {
     console.error("Error tracking visitor:", err);
   }
@@ -85,24 +59,22 @@ const trackVisitor = async () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      // const response = await axios.post("http://localhost:5678/user/login", {
-      //   email,
-      //   password,
-      // });
-
       const response = await axios.post(`${baseurl}user/login`, {
   email,
   password,
 });
 
 
-      const { user, message } = response.data;
+      const { token,user, message } = response.data;
 
       if (user.role === "admin") {
         setIsLoggedIn(true);
         setShowLogin(false);
         setIsMobileMenuOpen(false);
+
         localStorage.setItem("adminLoggedIn", "true"); 
+        localStorage.setItem("token", token);
+
         window.dispatchEvent(new Event("storage"));
         alert(message || "Login successful!");
         fetchCounts();

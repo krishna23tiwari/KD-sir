@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const visitor = require("../Controller/VisitorController");
+const auth = require('../MiddleWare/Auth')
 
-router.post("/track", visitor.trackVisitor);
+router.post("/track",auth, visitor.trackVisitor);
 
 router.get('/test', visitor.test)
 
-router.get('/counts', visitor.getCounts);
+router.get('/counts',auth, visitor.getCounts);
 
 module.exports = router;

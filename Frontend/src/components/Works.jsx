@@ -106,6 +106,10 @@ const Works = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [editId, setEditId] = useState(null);
 
+    const getAuthHeaders = () => {
+    const token = localStorage.getItem("token");
+    return { headers: { Authorization: `Bearer ${token}` } };
+  };
   
 
   useEffect(() => {
@@ -126,7 +130,7 @@ const Works = () => {
 
   const fetchProjects = async () => {
     try {
-      const res = await axios.get(`${baseurl}projects/getproject`);
+      const res = await axios.get(`${baseurl}projects/getproject`, getAuthHeaders());
       setProjects(res.data);
     } catch (err) {
       console.error("Failed to load projects", err);
@@ -134,8 +138,58 @@ const Works = () => {
   };
 
 
- const handleAddProject = async (e) => {
-   e.preventDefault();
+//  const handleAddProject = async (e) => {
+//    e.preventDefault();
+
+//   const tagsArray = formData.tags.split(",").map((tag) => ({
+//     name: tag.trim(),
+//     color: "text-green-400",
+//   }));
+
+//   const payload = new FormData();
+//   payload.append("name", formData.name);
+//   payload.append("description", formData.description);
+//   payload.append("link", formData.link);
+//   payload.append("source_code_link", formData.source_code_link);
+//   payload.append("tags", JSON.stringify(tagsArray));
+//   if (formData.image) {
+//     payload.append("image", formData.image);
+//   }
+
+//   try {
+//     if (editId) {
+//       // Update
+//       await axios.put(`${baseurl}projects/update/${editId}`, payload, {
+//         headers: { "Content-Type": "multipart/form-data" },
+//       });
+//       console.log("Project updated");
+//     } else {
+//       // Add
+//       await axios.post(`${baseurl}projects/addproject`, payload, {
+//         headers: { "Content-Type": "multipart/form-data" },
+//       });
+//       console.log("Project added");
+//     }
+
+//     fetchProjects();
+//     setShowForm(false);
+//     setEditId(null); // Reset edit state
+//     setFormData({
+//       name: "",
+//       description: "",
+//       link: "",
+//       source_code_link: "",
+//       tags: "",
+//       image: null,
+//     });
+//   } catch (error) {
+//     console.error("Error submitting project:", error);
+//   }
+// };
+
+
+const handleAddProject = async (e) => {
+  e.preventDefault();
 
   const tagsArray = formData.tags.split(",").map((tag) => ({
     name: tag.trim(),
@@ -152,24 +206,28 @@ const Works = () => {
     payload.append("image", formData.image);
   }
 
+  // Merge your token header with content type
+  const config = {
+    headers: {
+      ...getAuthHeaders().headers,
+      "Content-Type": "multipart/form-data",
+    },
+  };
+
   try {
     if (editId) {
       // Update
-      await axios.put(`${baseurl}projects/update/${editId}`, payload, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await axios.put(`${baseurl}projects/update/${editId}`, payload, config);
       console.log("Project updated");
     } else {
       // Add
-      await axios.post(`${baseurl}projects/addproject`, payload, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await axios.post(`${baseurl}projects/addproject`, payload, config);
       console.log("Project added");
     }
 
     fetchProjects();
     setShowForm(false);
-    setEditId(null); // Reset edit state
+    setEditId(null);
     setFormData({
       name: "",
       description: "",
@@ -186,7 +244,7 @@ const Works = () => {
 const handleDelete = async (id) => {
   if (window.confirm("Are you sure you want to delete this project?")) {
     try {
-      await axios.delete(`${baseurl}projects/delete/${id}`);
+      await axios.delete(`${baseurl}projects/delete/${id}`, getAuthHeaders());
       fetchProjects(); 
     } catch (error) {
       console.error("Error deleting project:", error);

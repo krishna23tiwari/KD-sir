@@ -1,5 +1,7 @@
 const User = require("../Model/UserModel");
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken')
+const secret = process.env.SECRET
 
 
 exports.register = async (req, res) => {
@@ -52,7 +54,9 @@ exports.login = async (req, res) => {
       return res.status(403).json({ message: "Access denied. Admins only." });
     }
 
-    res.status(200).json({message: "Login successful",user: { email: user.email, role: user.role },});
+    const token = jwt.sign({email, role: user.role}, secret, {expiresIn: "24h"})
+
+    res.status(200).json({message: "Login successful", token, user: { email: user.email, role: user.role },});
   
 } catch (err) {
     console.error("Login Error:", err);
