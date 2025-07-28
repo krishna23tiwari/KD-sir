@@ -46,24 +46,49 @@
 
 
 // models/Visitor.js
+// const mongoose = require("mongoose");
+
+// const visitorSchema = new mongoose.Schema({
+//   ip: String,
+//   fingerprint: String,
+//   date: String,
+//   location: {
+//     country: String,
+//     region: String,
+//     city: String,
+//     isp: String,
+//     lat: Number,
+//     lon: Number,
+//   },
+// }, { timestamps: true, versionKey: false });
+
+// visitorSchema.index({ ip: 1, date: 1 }, { unique: true });
+
+// module.exports = mongoose.model("Visitor", visitorSchema);
+
+
 const mongoose = require("mongoose");
 
 const visitorSchema = new mongoose.Schema({
   ip: String,
-  fingerprint: String,
-  date: String,
   location: {
     country: String,
     region: String,
     city: String,
-    isp: String,
+     isp: String,
     lat: Number,
     lon: Number,
   },
-}, { timestamps: true, versionKey: false });
 
-visitorSchema.index({ ip: 1, date: 1 }, { unique: true });
+    deviceInfo: {
+    os: String,
+    device: String,
+    browser: String,
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+}, {timestamps : true, versionKey : false});
 
 module.exports = mongoose.model("Visitor", visitorSchema);
-
-

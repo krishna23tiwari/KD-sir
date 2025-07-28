@@ -15,10 +15,13 @@ const Navbar = () => {
   const [todayCount, setTodayCount] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [counts, setCounts] = useState({ todayCount: 0, totalCount: 0 });
+
 
   // 🔁 Load login status on first render
   useEffect(() => {
     const storedUser = localStorage.getItem("adminLoggedIn");
+    trackVisitor();
     if (storedUser === "true") {
       setIsLoggedIn(true);
       fetchCounts(); // fetch counts on refresh
@@ -37,24 +40,48 @@ const Navbar = () => {
   //   }
   // };
 
- const fetchCounts = async () => {
+//  const fetchCounts = async () => {
+//   try {
+//     const fp = await FingerprintJS.load();
+//     const result = await fp.get();
+//     const fingerprint = result.visitorId;
+
+//     const response = await axios.post(`${baseurl}visitor/track`, {
+//       fingerprint,
+//     });
+
+//     const { todayCount, totalCount } = response.data;
+//     setTodayCount(todayCount);
+//     setTotalCount(totalCount);
+//   } catch (err) {
+//     console.error("Error fetching count data:", err);
+//     alert("Failed to load visitor counts.");
+//   }
+// };
+
+
+const fetchCounts = async () => {
+  try {
+    const response = await axios.get(`${baseurl}visitor/counts`);
+    setCounts(response.data);
+  } catch (err) {
+    console.error("Error fetching counts:", err);
+  }
+};
+
+const trackVisitor = async () => {
   try {
     const fp = await FingerprintJS.load();
     const result = await fp.get();
     const fingerprint = result.visitorId;
 
-    const response = await axios.post(`${baseurl}visitor/track`, {
-      fingerprint,
-    });
-
-    const { todayCount, totalCount } = response.data;
-    setTodayCount(todayCount);
-    setTotalCount(totalCount);
+    await axios.post(`${baseurl}visitor/track`, { fingerprint });
   } catch (err) {
-    console.error("Error fetching count data:", err);
-    alert("Failed to load visitor counts.");
+    console.error("Error tracking visitor:", err);
   }
 };
+
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -125,8 +152,8 @@ const Navbar = () => {
           <li className="cursor-pointer hover:text-gray-300">Contact</li>
           {isLoggedIn && (
             <>
-              <li>Today's Count: <strong>{todayCount}</strong></li>
-              <li>Total Count: <strong>{totalCount}</strong></li>
+              <li>Today's Count: <strong>{counts.todayCount}</strong></li>
+              <li>Total Count: <strong>{counts.totalCount}</strong></li>
               <li className="cursor-pointer text-red-400 hover:text-red-600" onClick={handleLogout}>Logout</li>
             </>
           )}
