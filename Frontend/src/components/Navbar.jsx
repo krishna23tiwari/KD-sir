@@ -89,7 +89,7 @@ const trackVisitor = async () => {
     }
   };
 
-  console.log(`>>>token>>>`, token)
+ 
 
   const handleLogout = () => {
     setIsLoggedIn(false);
