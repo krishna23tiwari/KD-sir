@@ -37,20 +37,21 @@ const Navbar = () => {
 
 const fetchCounts = async () => {
   try {
-    const response = await axios.get(`${baseurl}visitor/counts`, getAuthHeaders());
+    const response = await axios.get(`${baseurl}visitor/counts`);
     setCounts(response.data);
   } catch (err) {
     console.error("Error fetching counts:", err);
   }
 };
 
+console.log(`>>>count>>>>`, counts)
 const trackVisitor = async () => {
   try {
     const fp = await FingerprintJS.load();
     const result = await fp.get();
     const fingerprint = result.visitorId;
 
-    await axios.post(`${baseurl}visitor/track`, { fingerprint }, getAuthHeaders());
+    await axios.post(`${baseurl}visitor/track`, { fingerprint });
   } catch (err) {
     console.error("Error tracking visitor:", err);
   }
@@ -144,8 +145,8 @@ const trackVisitor = async () => {
           <li className="cursor-pointer hover:text-gray-300">Contact</li>
           {isLoggedIn && (
             <>
-              <li>Today: <strong>{todayCount}</strong></li>
-              <li>Total: <strong>{totalCount}</strong></li>
+              <li>Today: <strong>{counts.todayCount}</strong></li>
+              <li>Total: <strong>{counts. totalCount}</strong></li>
               <li className="cursor-pointer text-red-400 hover:text-red-600" onClick={handleLogout}>Logout</li>
             </>
           )}
