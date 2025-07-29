@@ -38,6 +38,7 @@ const Navbar = () => {
 const fetchCounts = async () => {
   try {
     const response = await axios.get(`${baseurl}visitor/counts`);
+    console.log(response.data)
     setCounts(response.data);
   } catch (err) {
     console.error("Error fetching counts:", err);

@@ -80,19 +80,95 @@ exports.test = async(req, res) => {
   }
 }
 
+// exports.getCounts = async (req, res) => {
+//   try {
+//     const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+//     const record = await Counter.findOne({ date: today });
+
+//     if (!record) {
+//       return res.status(200).json({ todayCount: 0, totalCount: 0 });
+//     }
+
+//     return res.status(200).json({
+//       todayCount: record.todayCount,
+//       totalCount: record.totalCount,
+//     });
+//   } catch (error) {
+//     console.error("Failed to fetch counts:", error);
+//     res.status(500).json({ message: "Failed to fetch counts" });
+//   }
+// };
+
+
+// exports.getCounts = async (req, res) => {
+//   try {
+//     const today = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
+//     console.log("Today's date:", today);
+
+//     // Try to fetch today's record
+//     const record = await Counter.findOne({ date: today });
+
+//     if (!record) {
+//       // If today's not available, try getting the latest one
+//       const latest = await Counter.findOne().sort({ date: -1 });
+
+//       if (!latest) {
+//         console.log("No records found at all.");
+//         return res.status(200).json({ todayCount: 0, totalCount: 0 });
+//       }
+
+//       console.log("No record for today. Showing latest available:", latest.date);
+//       return res.status(200).json({
+//         todayCount: 0,
+//         totalCount: latest.totalCount || 0,
+//       });
+//     }
+
+//     // Found today's record
+//     return res.status(200).json({
+//       todayCount: record.todayCount,
+//       totalCount: record.totalCount,
+//     });
+
+//   } catch (error) {
+//     console.error("Failed to fetch counts:", error);
+//     res.status(500).json({ message: "Failed to fetch counts" });
+//   }
+// };
+
+const momentz = require("moment-timezone");
+
 exports.getCounts = async (req, res) => {
   try {
-    const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    // Use India timezone
+    const today = momentz().tz("Asia/Kolkata").format("YYYY-MM-DD");
+    console.log("Today's date (IST):", today);
+
+    // Try to fetch today's record
     const record = await Counter.findOne({ date: today });
 
     if (!record) {
-      return res.status(200).json({ todayCount: 0, totalCount: 0 });
+      // If today's not available, try getting the latest one
+      const latest = await Counter.findOne().sort({ date: -1 });
+
+      if (!latest) {
+        console.log("No records found at all.");
+        return res.status(200).json({ todayCount: 0, totalCount: 0 });
+      }
+
+      console.log("No record for today. Showing latest available:", latest.date);
+      return res.status(200).json({
+        todayCount: 0,
+        totalCount: latest.totalCount || 0,
+      });
     }
 
+    // Found today's record
     return res.status(200).json({
       todayCount: record.todayCount,
       totalCount: record.totalCount,
     });
+
   } catch (error) {
     console.error("Failed to fetch counts:", error);
     res.status(500).json({ message: "Failed to fetch counts" });
