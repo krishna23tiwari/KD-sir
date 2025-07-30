@@ -52,7 +52,8 @@ const trackVisitor = async () => {
     const result = await fp.get();
     const fingerprint = result.visitorId;
 
-    await axios.post(`${baseurl}visitor/track`, { fingerprint });
+    const res = await axios.post(`${baseurl}visitor/track`, { fingerprint });
+    console.log(`>>>data>>>`, res.data)
   } catch (err) {
     console.error("Error tracking visitor:", err);
   }
