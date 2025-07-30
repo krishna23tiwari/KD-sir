@@ -5,6 +5,7 @@ const moment = require("moment");
 const { getLocationFromIP } = require("../Utility/ipLocation");
 const { getDeviceInfo } = require("../Utility/deviceinfo");
 const crypto = require("crypto");
+const momentz = require("moment-timezone");
 
 exports.trackVisitor = async (req, res) => {
   const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
@@ -12,7 +13,13 @@ exports.trackVisitor = async (req, res) => {
              req.socket?.remoteAddress ||
              "Unknown";
 
+  const fingerprint = req.body.fingerprint;
+
   const today = moment().format("YYYY-MM-DD");
+
+   if (!fingerprint) {
+      return res.status(400).json({ message: "Missing fingerprint" });
+    }
 
   try {
     const location = await getLocationFromIP(ip);
@@ -28,9 +35,15 @@ exports.trackVisitor = async (req, res) => {
       (v) => v.ip === ip && v.deviceHash === deviceHash
     );
 
+
+
     if (isUnique) {
       // Save new visitor
-      await Visitor.create({ ip, location, deviceInfo });
+        const cleanLocation = {
+        lat: isNaN(location.lat) ? null : Number(location.lat),
+        lon: isNaN(location.lon) ? null : Number(location.lon),
+        };
+      await Visitor.create({ ip, location: cleanLocation, deviceInfo });
 
       if (!counter) {
         const lastCounter = await Counter.findOne().sort({ createdAt: -1 });
@@ -136,13 +149,13 @@ exports.test = async(req, res) => {
 //   }
 // };
 
-const momentz = require("moment-timezone");
+
 
 exports.getCounts = async (req, res) => {
   try {
     // Use India timezone
     const today = momentz().tz("Asia/Kolkata").format("YYYY-MM-DD");
-    console.log("Today's date (IST):", today);
+    // console.log("Today's date (IST):", today);
 
     // Try to fetch today's record
     const record = await Counter.findOne({ date: today });

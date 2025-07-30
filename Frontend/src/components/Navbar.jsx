@@ -38,14 +38,14 @@ const Navbar = () => {
 const fetchCounts = async () => {
   try {
     const response = await axios.get(`${baseurl}visitor/counts`);
-    console.log(response.data)
+    // console.log(response.data)
     setCounts(response.data);
   } catch (err) {
     console.error("Error fetching counts:", err);
   }
 };
 
-console.log(`>>>count>>>>`, counts)
+// console.log(`>>>count>>>>`, counts)
 const trackVisitor = async () => {
   try {
     const fp = await FingerprintJS.load();
@@ -69,7 +69,7 @@ const trackVisitor = async () => {
 
 
       const { token,user, message } = response.data;
-      console.log("Received token from server:", token);
+      // console.log("Received token from server:", token);
     
 
       if (user.role === "admin") {

@@ -15,8 +15,8 @@ exports.getProjects = async (req, res) => {
 
 exports.addProject = async (req, res) => {
   try {
-    console.log("Received body:", req.body);
-    console.log("Received files:", req.files);
+    // console.log("Received body:", req.body);
+    // console.log("Received files:", req.files);
 
     const file = req.files?.image;
     let imageUrl = "";

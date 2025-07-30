@@ -5,7 +5,7 @@ const secret = process.env.SECRET
 module.exports = async(req, res, next) => {
     const barrertoken = req.headers.authorization
 
-    console.log(`>>>barrertoken>>>>`, barrertoken)
+    // console.log(`>>>barrertoken>>>>`, barrertoken)
 
     if(!barrertoken){
         return res.status(400).json("Error in barrertoken")
@@ -13,7 +13,7 @@ module.exports = async(req, res, next) => {
 
     const token = barrertoken.split(" ")[1]
 
-    console.log(`>>>token>>>>`, token)
+    // console.log(`>>>token>>>>`, token)
 
      if(!token){
         return res.status(400).json("Error in token")
@@ -21,7 +21,7 @@ module.exports = async(req, res, next) => {
 
     const decode = jwt.verify(token, secret)
 
-    console.log(`>>>>>decode>>>>>`, decode)
+    // console.log(`>>>>>decode>>>>>`, decode)
 
      if(!decode){
         return res.status(400).json("Error in decode")

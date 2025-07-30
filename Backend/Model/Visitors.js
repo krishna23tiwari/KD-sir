@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+
 const visitorSchema = new mongoose.Schema({
   ip: String,
   location: {
