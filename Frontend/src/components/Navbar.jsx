@@ -6,14 +6,13 @@ import axios from "axios";
 import { Menu, X } from "lucide-react";
 import baseurl from "./BaseUrl";
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [todayCount, setTodayCount] = useState(0);
-  const [totalCount, setTotalCount] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [counts, setCounts] = useState({ todayCount: 0, totalCount: 0 });
   
@@ -29,7 +28,7 @@ const Navbar = () => {
     trackVisitor();
     if (storedUser === "true") {
       setIsLoggedIn(true);
-      fetchCounts(); // fetch counts on refresh
+      fetchCounts();
     }
   }, []);
 
@@ -96,11 +95,9 @@ const trackVisitor = async () => {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    localStorage.removeItem("adminLoggedIn"); // ❌ remove on logout
+    localStorage.removeItem("adminLoggedIn"); 
     setEmail("");
     setPassword("");
-    setTodayCount(0);
-    setTotalCount(0);
     setIsMobileMenuOpen(false);
     alert("Logged out.");
   };

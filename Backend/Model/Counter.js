@@ -17,7 +17,7 @@ const counterSchema = new mongoose.Schema({
   uniqueVisitors: [
     {
       ip: String,
-      deviceHash: String, // hashed device info to check uniqueness
+      deviceHash: String, 
     },
   ],
 }, { timestamps: true, versionKey: false });
