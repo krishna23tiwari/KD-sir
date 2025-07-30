@@ -13,13 +13,13 @@ exports.trackVisitor = async (req, res) => {
              req.socket?.remoteAddress ||
              "Unknown";
 
-  const fingerprint = req.body.fingerprint;
+  // const fingerprint = req.body.fingerprint || null;
 
   const today = moment().format("YYYY-MM-DD");
 
-   if (!fingerprint) {
-      return res.status(400).json({ message: "Missing fingerprint" });
-    }
+  //  if (!fingerprint) {
+  //     return res.status(400).json({ message: "Missing fingerprint" });
+  //   }
 
   try {
     const location = await getLocationFromIP(ip);
@@ -39,11 +39,11 @@ exports.trackVisitor = async (req, res) => {
 
     if (isUnique) {
       // Save new visitor
-        const cleanLocation = {
-        lat: isNaN(location.lat) ? null : Number(location.lat),
-        lon: isNaN(location.lon) ? null : Number(location.lon),
-        };
-      await Visitor.create({ ip, location: cleanLocation, deviceInfo });
+        // const cleanLocation = {
+        // lat: isNaN(location.lat) ? null : Number(location.lat),
+        // lon: isNaN(location.lon) ? null : Number(location.lon),
+        // };
+      await Visitor.create({ ip, location, deviceInfo });
 
       if (!counter) {
         const lastCounter = await Counter.findOne().sort({ createdAt: -1 });
