@@ -45,16 +45,26 @@ const fetchCounts = async () => {
 };
 
 // console.log(`>>>count>>>>`, counts)
+// const trackVisitor = async () => {
+//   try {
+//     const fp = await FingerprintJS.load();
+//     const result = await fp.get();
+//     const fingerprint = result.visitorId;
+
+//     const res = await axios.post(`${baseurl}visitor/track`, { fingerprint });
+//     console.log(`>>>data>>>`, res.data)
+//   } catch (err) {
+//     console.error("Error tracking visitor:", err);
+//   }
+// };
+
+
 const trackVisitor = async () => {
   try {
-    const fp = await FingerprintJS.load();
-    const result = await fp.get();
-    const fingerprint = result.visitorId;
-
-    const res = await axios.post(`${baseurl}visitor/track`, { fingerprint });
-    console.log(`>>>data>>>`, res.data)
+    const res = await axios.post(`${baseurl}visitor/track`);
+    console.log(">>>data>>>", res.data);
   } catch (err) {
-    console.error("Error tracking visitor:", err);
+    console.error("Error tracking visitor:", err?.response?.data || err);
   }
 };
 
