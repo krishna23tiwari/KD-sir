@@ -149,7 +149,72 @@ const momentz = require("moment-timezone");
 
 
 
+// exports.trackVisitor = async (req, res) => {
+//   const ip =
+//     req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
+//     req.socket?.remoteAddress ||
+//     req.connection?.remoteAddress ||
+//     req.ip ||
+//     "Unknown";
+
+//   console.log("🧠 IP:", ip);
+//   console.log("📩 Visitor route hit");
+
+  
+//   const today = momentz().tz("Asia/Kolkata").format("YYYY-MM-DD");
+
+//   try {
+//     const location = await getLocationFromIP(ip);
+//     const deviceInfo = getDeviceInfo(req);
+//     const deviceHash = crypto
+//       .createHash("sha256")
+//       .update(`${deviceInfo.os}-${deviceInfo.device}-${deviceInfo.browser}`)
+//       .digest("hex");
+
+//     console.log("🔐 Device Hash:", deviceHash);
+
+//     let counter = await Counter.findOne({ date: today });
+
+//     const isUnique = !counter?.uniqueVisitors?.some(
+//       (v) => v.ip === ip && v.deviceHash === deviceHash
+//     );
+
+//     if (isUnique) {
+//       await Visitor.create({ ip, location, deviceInfo });
+
+//       if (!counter) {
+//         const lastCounter = await Counter.findOne().sort({ createdAt: -1 });
+//         const totalCount = lastCounter ? lastCounter.totalCount : 0;
+
+//         counter = await Counter.create({
+//           date: today,
+//           todayCount: 1,
+//           totalCount: totalCount + 1,
+//           uniqueVisitors: [{ ip, deviceHash }],
+//         });
+//       } else {
+//         counter.todayCount += 1;
+//         counter.totalCount += 1;
+//         counter.uniqueVisitors.push({ ip, deviceHash });
+//         await counter.save();
+//       }
+//     }
+
+//     res.status(200).json({
+//       message: isUnique ? "Visitor tracked" : "Already counted today",
+//       ip,
+//       location,
+//       deviceInfo,
+//     });
+//   } catch (err) {
+//     console.error("❌ Visitor tracking failed:", err);
+//     res.status(500).json({ error: "Failed to track visitor" });
+//   }
+// };
+
+
 exports.trackVisitor = async (req, res) => {
+  // Extract IP (falls back through various possible sources)
   const ip =
     req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
     req.socket?.remoteAddress ||
@@ -159,32 +224,73 @@ exports.trackVisitor = async (req, res) => {
 
   console.log("🧠 IP:", ip);
   console.log("📩 Visitor route hit");
+  console.log("Headers snapshot:", {
+    "user-agent": req.headers["user-agent"],
+    accept: req.headers["accept"],
+    "x-forwarded-for": req.headers["x-forwarded-for"],
+  });
 
-  
+  // Ignore internal/local traffic
+  if (ip === "::1" || ip === "127.0.0.1") {
+    return res.status(200).json({ message: "Ignored internal request", ip });
+  }
+
+  // Optional: ignore very minimalistic requests that look like health checks or probes.
+  const ua = (req.headers["user-agent"] || "").toLowerCase();
+  if (
+    !req.headers["accept"] || // missing normal browser headers
+    ua.includes("render") || // heuristic: Render internal checks might include identifiable substrings; adjust after inspecting real logs
+    ua === "" // blank UA
+  ) {
+    return res.status(200).json({ message: "Ignored probe/internal-like request", ip });
+  }
+
+  // Use consistent IST date
   const today = momentz().tz("Asia/Kolkata").format("YYYY-MM-DD");
+  console.log("Tracking date (IST):", today);
 
   try {
-    const location = await getLocationFromIP(ip);
-    const deviceInfo = getDeviceInfo(req);
+    // Fetch location and device info (wrap for resilience if necessary)
+    let location = {};
+    try {
+      location = await getLocationFromIP(ip);
+    } catch (e) {
+      console.warn("Location lookup failed, proceeding with empty location", e);
+    }
+
+    let deviceInfo = {};
+    try {
+      deviceInfo = getDeviceInfo(req);
+    } catch (e) {
+      console.warn("Device info extraction failed, proceeding with empty deviceInfo", e);
+    }
+
     const deviceHash = crypto
       .createHash("sha256")
-      .update(`${deviceInfo.os}-${deviceInfo.device}-${deviceInfo.browser}`)
+      .update(`${deviceInfo.os || ""}-${deviceInfo.device || ""}-${deviceInfo.browser || ""}`)
       .digest("hex");
 
     console.log("🔐 Device Hash:", deviceHash);
 
+    // Fetch today's counter
     let counter = await Counter.findOne({ date: today });
+    console.log("Existing counter for today:", counter ? "FOUND" : "NOT FOUND");
 
-    const isUnique = !counter?.uniqueVisitors?.some(
+    // Check uniqueness: ip + deviceHash pair
+    const alreadySeen = counter?.uniqueVisitors?.some(
       (v) => v.ip === ip && v.deviceHash === deviceHash
     );
+    const isUnique = !alreadySeen;
+    console.log("Is unique visitor today?", isUnique);
 
     if (isUnique) {
+      // Save visitor record
       await Visitor.create({ ip, location, deviceInfo });
 
       if (!counter) {
-        const lastCounter = await Counter.findOne().sort({ createdAt: -1 });
-        const totalCount = lastCounter ? lastCounter.totalCount : 0;
+        // No counter for today yet: create fresh
+        const latest = await Counter.findOne().sort({ createdAt: -1 });
+        const totalCount = latest ? latest.totalCount : 0;
 
         counter = await Counter.create({
           date: today,
@@ -192,14 +298,23 @@ exports.trackVisitor = async (req, res) => {
           totalCount: totalCount + 1,
           uniqueVisitors: [{ ip, deviceHash }],
         });
+
+        console.log("Created new counter for today:", counter);
       } else {
-        counter.todayCount += 1;
-        counter.totalCount += 1;
-        counter.uniqueVisitors.push({ ip, deviceHash });
-        await counter.save();
+        // Update existing counter atomically-ish
+        counter = await Counter.findOneAndUpdate(
+          { date: today },
+          {
+            $inc: { todayCount: 1, totalCount: 1 },
+            $addToSet: { uniqueVisitors: { ip, deviceHash } },
+          },
+          { new: true }
+        );
+        console.log("Updated existing counter:", counter);
       }
     }
 
+    // Respond
     res.status(200).json({
       message: isUnique ? "Visitor tracked" : "Already counted today",
       ip,
