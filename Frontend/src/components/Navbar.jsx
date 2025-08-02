@@ -265,7 +265,164 @@ const trackVisitor = async () => {
     // </nav>
 
 
-    <nav className="w-full text-white shadow-lg fixed top-0 left-0 z-50">
+//     <nav className="w-full text-white shadow-lg fixed top-0 left-0 z-50">
+//   <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+//     {/* Logo */}
+//     <div
+//       className="flex items-center gap-2 cursor-pointer"
+//       onClick={() => !isLoggedIn && setShowLogin(true)}
+//     >
+//       <p className="text-lg sm:text-xl font-bold">
+//         Aushtosh
+//         <span className="hidden sm:inline"> | AWS</span>
+//       </p>
+//     </div>
+
+//     {/* AWS / Main Link Button */}
+//     <div className="flex items-center gap-2">
+//       <button
+//         onClick={() => {
+//           if (isLoggedIn) {
+//             setEditingUrl((prev) => !prev);
+//             setTimeout(() => urlInputRef.current?.focus(), 100);
+//           } else {
+//             if (mainUrl) window.open(mainUrl, "_blank");
+//           }
+//         }}
+//         className={`px-4 py-2 rounded ${
+//           isLoggedIn
+//             ? "bg-green-600 hover:bg-green-700"
+//             : "bg-blue-600 hover:bg-blue-700"
+//         }`}
+//       >
+//         Open Link
+//       </button>
+
+//       {isLoggedIn && editingUrl && (
+//         <>
+//           <input
+//             ref={urlInputRef}
+//             type="text"
+//             value={mainUrl}
+//             onChange={(e) => setMainUrl(e.target.value)}
+//             placeholder="Enter URL"
+//             className="px-3 py-1 rounded bg-gray-800 text-white w-[300px]"
+//           />
+//           <button
+//             onClick={saveMainUrl}
+//             className="px-3 py-1 bg-indigo-500 hover:bg-indigo-600 rounded text-white"
+//           >
+//             Save
+//           </button>
+//         </>
+//       )}
+//     </div>
+
+//     {/* Hamburger Icon */}
+//     <div className="sm:hidden">
+//       <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+//         {isMobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
+//       </button>
+//     </div>
+
+//     {/* Desktop Menu */}
+//     <ul className="hidden sm:flex gap-6 items-center">
+//       <li onClick={scrollToHero} className="cursor-pointer hover:text-gray-300">
+//         Home
+//       </li>
+//       <li onClick={scrollToContact} className="cursor-pointer hover:text-gray-300">
+//         Contact
+//       </li>
+//       {isLoggedIn && (
+//         <>
+//           <li>
+//             Today's Count: <strong>{counts.todayCount}</strong>
+//           </li>
+//           <li>
+//             Total Count: <strong>{counts.totalCount}</strong>
+//           </li>
+//           <li
+//             className="cursor-pointer text-red-400 hover:text-red-600"
+//             onClick={handleLogout}
+//           >
+//             Logout
+//           </li>
+//         </>
+//       )}
+//     </ul>
+//   </div>
+
+//   {/* Mobile Menu */}
+//   {isMobileMenuOpen && (
+//     <ul className="sm:hidden bg-gray-900 px-6 py-4 space-y-3 text-sm">
+//       <li onClick={scrollToHero} className="cursor-pointer hover:text-gray-300">
+//         Home
+//       </li>
+//       <li onClick={scrollToContact} className="cursor-pointer hover:text-gray-300">
+//         Contact
+//       </li>
+//       {isLoggedIn && (
+//         <>
+//           <li>
+//             Today: <strong>{counts.todayCount}</strong>
+//           </li>
+//           <li>
+//             Total: <strong>{counts.totalCount}</strong>
+//           </li>
+//           <li
+//             className="cursor-pointer text-red-400 hover:text-red-600"
+//             onClick={handleLogout}
+//           >
+//             Logout
+//           </li>
+//         </>
+//       )}
+//     </ul>
+//   )}
+
+//   {/* Login Modal */}
+//   {showLogin && !isLoggedIn && (
+//     <div className="absolute top-20 right-8 w-[300px] bg-white p-6 rounded-xl shadow-2xl animate-fade-in z-50">
+//       <form onSubmit={handleLogin} className="flex flex-col gap-4">
+//         <h2 className="text-xl font-semibold text-center text-gray-700">
+//           Admin Login
+//         </h2>
+//         <input
+//           type="email"
+//           placeholder="Email"
+//           value={email}
+//           onChange={(e) => setEmail(e.target.value)}
+//           className="border border-gray-300 rounded-lg px-3 py-2"
+//           required
+//         />
+//         <input
+//           type="password"
+//           placeholder="Password"
+//           value={password}
+//           onChange={(e) => setPassword(e.target.value)}
+//           className="border border-gray-300 rounded-lg px-3 py-2"
+//           required
+//         />
+//         <button
+//           type="submit"
+//           className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg py-2 font-semibold"
+//         >
+//           Sign In
+//         </button>
+//         <button
+//           type="button"
+//           onClick={() => setShowLogin(false)}
+//           className="text-sm text-center text-gray-500 hover:text-red-500"
+//         >
+//           Cancel
+//         </button>
+//       </form>
+//     </div>
+//   )}
+// </nav>
+
+
+<nav className="w-full text-white shadow-lg fixed top-0 left-0 z-50">
   <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
     {/* Logo */}
     <div
@@ -278,8 +435,8 @@ const trackVisitor = async () => {
       </p>
     </div>
 
-    {/* AWS / Main Link Button */}
-    <div className="flex items-center gap-2">
+    {/* AWS / Main Link Button (Desktop Only) */}
+    <div className="hidden sm:flex items-center gap-2">
       <button
         onClick={() => {
           if (isLoggedIn) {
@@ -335,12 +492,8 @@ const trackVisitor = async () => {
       </li>
       {isLoggedIn && (
         <>
-          <li>
-            Today's Count: <strong>{counts.todayCount}</strong>
-          </li>
-          <li>
-            Total Count: <strong>{counts.totalCount}</strong>
-          </li>
+          <li>Today's Count: <strong>{counts.todayCount}</strong></li>
+          <li>Total Count: <strong>{counts.totalCount}</strong></li>
           <li
             className="cursor-pointer text-red-400 hover:text-red-600"
             onClick={handleLogout}
@@ -354,21 +507,58 @@ const trackVisitor = async () => {
 
   {/* Mobile Menu */}
   {isMobileMenuOpen && (
-    <ul className="sm:hidden bg-gray-900 px-6 py-4 space-y-3 text-sm">
+    <ul className="sm:hidden bg-gray-900 px-6 py-4 space-y-4 text-sm">
       <li onClick={scrollToHero} className="cursor-pointer hover:text-gray-300">
         Home
       </li>
       <li onClick={scrollToContact} className="cursor-pointer hover:text-gray-300">
         Contact
       </li>
+
+      {/* Mobile AWS Button */}
+      <li>
+        <button
+          onClick={() => {
+            if (isLoggedIn) {
+              setEditingUrl((prev) => !prev);
+              setTimeout(() => urlInputRef.current?.focus(), 100);
+            } else {
+              if (mainUrl) window.open(mainUrl, "_blank");
+            }
+          }}
+          className={`w-full px-4 py-2 rounded ${
+            isLoggedIn
+              ? "bg-green-600 hover:bg-green-700"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
+        >
+          Open Link
+        </button>
+
+        {isLoggedIn && editingUrl && (
+          <div className="mt-2 flex flex-col gap-2">
+            <input
+              ref={urlInputRef}
+              type="text"
+              value={mainUrl}
+              onChange={(e) => setMainUrl(e.target.value)}
+              placeholder="Enter URL"
+              className="px-3 py-2 rounded bg-gray-800 text-white w-full"
+            />
+            <button
+              onClick={saveMainUrl}
+              className="px-3 py-2 bg-indigo-500 hover:bg-indigo-600 rounded text-white w-full"
+            >
+              Save
+            </button>
+          </div>
+        )}
+      </li>
+
       {isLoggedIn && (
         <>
-          <li>
-            Today: <strong>{counts.todayCount}</strong>
-          </li>
-          <li>
-            Total: <strong>{counts.totalCount}</strong>
-          </li>
+          <li>Today: <strong>{counts.todayCount}</strong></li>
+          <li>Total: <strong>{counts.totalCount}</strong></li>
           <li
             className="cursor-pointer text-red-400 hover:text-red-600"
             onClick={handleLogout}
@@ -420,6 +610,7 @@ const trackVisitor = async () => {
     </div>
   )}
 </nav>
+
 
 
     
