@@ -58,29 +58,74 @@
 
 // module.exports = scheduleVisitorReset;
 
+// const cron = require("node-cron");
+// const Visitor = require("../Model/Visitors");
+// const Counter = require("../Model/Counter");
+
+// const scheduleVisitorReset = () => {
+//   cron.schedule(
+//     "0 0 * * *", // every midnight
+//     async () => {
+//       try {
+//         await Visitor.deleteMany({});
+//         console.log("✅ Visitor IPs reset at midnight.");
+
+//         // Get latest counter document (sorted by created date)
+//         const latestCounter = await Counter.findOne({}, {}, { sort: { createdAt: -1 } });
+
+//         if (latestCounter) {
+//           latestCounter.todayCount = 0;
+//           latestCounter.uniqueVisitors = [];
+//           await latestCounter.save();
+
+//           console.log("✅ Latest counter reset:", latestCounter.date);
+//         } else {
+//           console.log("ℹ️ No counter found to reset.");
+//         }
+//       } catch (error) {
+//         console.error("❌ Cron reset failed:", error);
+//       }
+//     },
+//     {
+//       timezone: "Asia/Kolkata",
+//     }
+//   );
+// };
+
+// module.exports = scheduleVisitorReset;
+
+
 const cron = require("node-cron");
-const Visitor = require("../Model/Visitors");
+const momentz = require("moment-timezone");
 const Counter = require("../Model/Counter");
 
 const scheduleVisitorReset = () => {
   cron.schedule(
-    "0 0 * * *", // every midnight
+    "0 0 * * *", // every midnight IST
     async () => {
       try {
-        await Visitor.deleteMany({});
-        console.log("✅ Visitor IPs reset at midnight.");
+        const today = momentz().tz("Asia/Kolkata").format("YYYY-MM-DD");
 
-        // Get latest counter document (sorted by created date)
-        const latestCounter = await Counter.findOne({}, {}, { sort: { createdAt: -1 } });
+        let todayCounter = await Counter.findOne({ date: today });
 
-        if (latestCounter) {
-          latestCounter.todayCount = 0;
-          latestCounter.uniqueVisitors = [];
-          await latestCounter.save();
-
-          console.log("✅ Latest counter reset:", latestCounter.date);
+        if (todayCounter) {
+          // Reset existing today's counter
+          todayCounter.todayCount = 0;
+          todayCounter.uniqueVisitors = [];
+          await todayCounter.save();
+          console.log(`✅ Existing counter for ${today} reset.`);
         } else {
-          console.log("ℹ️ No counter found to reset.");
+          // Create new counter for today, carrying forward totalCount
+          const latest = await Counter.findOne().sort({ date: -1 });
+          const carryTotal = latest ? latest.totalCount : 0;
+
+          todayCounter = await Counter.create({
+            date: today,
+            todayCount: 0,
+            totalCount: carryTotal,
+            uniqueVisitors: [],
+          });
+          console.log(`✅ Created new counter for ${today}:`, todayCounter);
         }
       } catch (error) {
         console.error("❌ Cron reset failed:", error);

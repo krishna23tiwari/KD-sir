@@ -11,6 +11,12 @@ import axios from "axios";
 import baseurl from "./BaseUrl";
 import { Github, Pencil, Trash2 } from "lucide-react";
 
+const truncateWords = (text = "", wordLimit = 50) => {
+  const words = text.trim().split(/\s+/);
+  if (words.length <= wordLimit) return text;
+  return words.slice(0, wordLimit).join(" ") + "...";
+};
+
 const ProjectCard = ({
   index,
   name,
@@ -23,6 +29,11 @@ const ProjectCard = ({
   onEdit,
   onDelete,
 }) => {
+    const [expanded, setExpanded] = useState(false);
+  const full = description;
+  const preview = truncateWords(full, 20);
+  const needsToggle = full.trim().split(/\s+/).length > 50;
+
   return (
     <motion.div variants={fadeIn("up", "spring", index * 0.5, 0.75)}>
       <Tilt
@@ -53,7 +64,18 @@ const ProjectCard = ({
         {/* Project Details */}
         <div className="mt-5">
           <h3 className="text-white font-bold text-[24px]">{name}</h3>
-          <p className="mt-2 text-secondary text-[14px]">{description}</p>
+          {/* <p className="mt-2 text-secondary text-[14px]">{description}</p> */}
+                <p className="mt-2 text-secondary text-[14px]">
+            {expanded ? full : preview}{" "}
+            {needsToggle && (
+              <button
+                onClick={() => setExpanded((e) => !e)}
+                className="text-sm text-indigo-400 ml-1 underline"
+              >
+                {expanded ? "Show less" : "Read more"}
+              </button>
+            )}
+          </p>
         </div>
 
         {/* Tags */}
@@ -95,16 +117,19 @@ const ProjectCard = ({
 const Works = () => {
   const [projects, setProjects] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    link: "",
-    source_code_link: "",
-    tags: "",
-    image: null,
-  });
+    const [formData, setFormData] = useState({
+      name: "",
+      description: "",
+      link: "",
+      source_code_link: "",
+      tags: "",
+      image: null,
+    });
   const [isAdmin, setIsAdmin] = useState(false);
   const [editId, setEditId] = useState(null);
+  // const [expanded, setExpanded] = useState(false);
+  // const full = project.description || "";
+  // const preview = truncateWords(full, 50);
 
     const getAuthHeaders = () => {
     const token = localStorage.getItem("token");
@@ -186,6 +211,13 @@ const Works = () => {
 //     console.error("Error submitting project:", error);
 //   }
 // };
+
+// const truncateWords = (text = "", wordLimit = 50) => {
+//   const words = text.trim().split(/\s+/);
+//   if (words.length <= wordLimit) return text;
+//   return words.slice(0, wordLimit).join(" ") + "...";
+// };
+
 
 
 const handleAddProject = async (e) => {

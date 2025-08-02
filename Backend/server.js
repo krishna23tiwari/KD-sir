@@ -32,12 +32,14 @@ const userroute = require('./Router/UserRouter')
 const projectroute = require('./Router/ProjectRouter')
 const heroroute = require('./Router/HeroTextRoute')
 const AboutRoute = require('./Router/AboutRouter')
+const urlRoute = require('./Router/UrlRouter')
 
 app.use('/visitor', visitors)
 app.use('/user', userroute)
 app.use('/projects', projectroute)
 app.use('/hero', heroroute)
 app.use('/about', AboutRoute)
+app.use('/url', urlRoute)
 
 scheduleVisitorReset();
 
