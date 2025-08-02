@@ -160,7 +160,7 @@ exports.trackVisitor = async (req, res) => {
   console.log("🧠 IP:", ip);
   console.log("📩 Visitor route hit");
 
-  // Use consistent IST date everywhere
+  
   const today = momentz().tz("Asia/Kolkata").format("YYYY-MM-DD");
 
   try {
@@ -175,7 +175,6 @@ exports.trackVisitor = async (req, res) => {
 
     let counter = await Counter.findOne({ date: today });
 
-    // Proper uniqueness predicate: avoid double counting same ip+deviceHash for the day
     const isUnique = !counter?.uniqueVisitors?.some(
       (v) => v.ip === ip && v.deviceHash === deviceHash
     );

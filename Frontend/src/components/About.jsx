@@ -4,7 +4,7 @@ import Tilt from "react-parallax-tilt";
 import { motion } from "framer-motion";
 
 import { styles } from "../styles";
-import { services } from "../constants";
+// import { services } from "../constants";
 import { SectionWrapper } from "../hoc";
 import { fadeIn, textVariant } from "../utils/motion";
 import ComputersCanvas from './canvas/Computers';
@@ -49,11 +49,14 @@ const About = () => {
   variants={fadeIn("", "", 0.1, 1)}
   className='mt-4 text-secondary text-[17px] max-w-3xl leading-[30px]'
 >
-I'm a passionate Full Stack Web Developer and Competitive Programmer with one year of hands-on experience as a trainee at REGex Software. During this time, I’ve contributed to the development and deployment of dynamic and scalable web applications, working across both frontend and backend technologies.<br></br>
 
-I’ve gained extensive experience with React.js, Next.js, Node.js, Express.js, MongoDB, MySQL, PostgreSQL, HTML, CSS, and JavaScript, and have collaborated on real-world projects in agile environments.<br></br>
+Amazon Web Services (AWS) is a comprehensive cloud computing platform provided by Amazon, offering a wide range of infrastructure and application services. Launched in 2006, AWS enables individuals, startups, and enterprises to build and scale applications without investing heavily in physical hardware. Its services are delivered on-demand and follow a pay-as-you-go pricing model, making it cost-effective and flexible.
 
-At REGex Software, I’ve been actively involved in the full software development lifecycle — from brainstorming and building features to deploying and maintaining production-ready applications. I take pride in writing clean, efficient code and continuously improving my skills to stay current with modern web development trends.
+AWS offers core services such as compute (Amazon EC2, Lambda), storage (Amazon S3, EBS), databases (Amazon RDS, DynamoDB), and networking (VPC, Route 53). It also provides advanced solutions in artificial intelligence, machine learning, analytics, DevOps, IoT, and security. With a global infrastructure spanning multiple regions and availability zones, AWS ensures high availability, scalability, and disaster recovery.<br></br>
+
+Security is a key focus for AWS, offering features like encryption, identity and access management (IAM), and compliance with global standards. It supports various deployment models, including public, private, and hybrid cloud architectures.<br></br>
+
+Organizations use AWS for hosting websites, running enterprise applications, big data processing, backup and disaster recovery, and deploying microservices. Its scalability, reliability, and innovation have made AWS a leader in the cloud computing industry, empowering businesses to innovate and scale faster.
 
 
 </motion.p>
@@ -63,19 +66,19 @@ At REGex Software, I’ve been actively involved in the full software developmen
   className='mt-4 text-secondary text-[17px] max-w-3xl leading-[30px]'
 >
   <p>
-    <span className="text-white">Degree:</span> Masters of Comuter Applications(MCA) &nbsp; <span className="text-white">CGPA:</span> 8.8
+    {/* <span className="text-white">Degree:</span> Masters of Comuter Applications(MCA) &nbsp; <span className="text-white">CGPA:</span> 8.8 */}
   </p>
-  <p className='mt-2'>
+  {/* <p className='mt-2'>
     <span className="text-white">Email:</span> krishna23tiwari.kt@gmail.com
-  </p>
+  </p> */}
 </motion.div>
 
         
-      <div className='mt-20 flex flex-wrap gap-10'>
+      {/* <div className='mt-20 flex flex-wrap gap-10'>
         {services.map((service, index) => (
           <ServiceCard key={service.title} index={index} {...service} />
         ))}
-      </div>
+      </div> */}
     </>
   );
 };

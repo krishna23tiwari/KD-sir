@@ -122,7 +122,7 @@ const trackVisitor = async () => {
         >
           {/* <img src={klogo} alt="logo" className="w-9 h-9 object-contain" /> */}
           <p className="text-lg sm:text-xl font-bold">
-            KK Tiwari <span className="hidden sm:inline">| Full-Stack Developer</span>
+            Aushtosh <span className="hidden sm:inline">| AWS</span>
           </p>
         </div>
 

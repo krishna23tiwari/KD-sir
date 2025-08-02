@@ -52,24 +52,24 @@ export const navLinks = [
   },
 ];
 
-const services = [
-  {
-    title: "Mern Stack Developer",
-    icon: web,
-  },
-  {
-    title: "Frontend Developer",
-    icon: mobile,
-  },
-  {
-    title: "Backend Developer",
-    icon: backend,
-  },
-  {
-    title: "Competitive Programmer",
-    icon: creator,
-  },
-];
+// const services = [
+//   {
+//     title: "Mern Stack Developer",
+//     icon: web,
+//   },
+//   {
+//     title: "Frontend Developer",
+//     icon: mobile,
+//   },
+//   {
+//     title: "Backend Developer",
+//     icon: backend,
+//   },
+//   {
+//     title: "Competitive Programmer",
+//     icon: creator,
+//   },
+// ];
 
 // const technologies = [
 //   {
