@@ -394,7 +394,7 @@ const visibleProjects = filteredProjects.slice(0, visibleCount);
         </div>
       )}
 
-      <div className="mt-20 flex flex-wrap gap-6">
+      {/* <div className="mt-20 flex flex-wrap gap-6">
      
 
 <div className="mt-20 flex flex-wrap justify-center gap-6">
@@ -405,7 +405,7 @@ const visibleProjects = filteredProjects.slice(0, visibleCount);
   ) : (
     visibleProjects.map((project, index) => (
       <ProjectCard
-        key={project._id}
+        key={project._id || index}
         index={index}
         {...project}
         isAdmin={isAdmin}
@@ -417,7 +417,7 @@ const visibleProjects = filteredProjects.slice(0, visibleCount);
 </div>
 
 {visibleCount < filteredProjects.length && (
-  <div className="mt-10 flex justify-center items-center">
+  <div className="mt-10 pl-4 flex justify-center items-center">
     <button
       onClick={() => setVisibleCount((prev) => prev + 6)}
       className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl shadow-md transition-transform duration-300 hover:scale-105"
@@ -429,7 +429,41 @@ const visibleProjects = filteredProjects.slice(0, visibleCount);
 
 
 
-      </div>
+      </div> */}
+
+      <div className="mt-20 flex flex-col items-center w-full">
+  <div className="flex flex-wrap justify-center gap-6 w-full">
+    {loading ? (
+      <p className="text-white text-lg">Loading projects...</p>
+    ) : visibleProjects.length === 0 ? (
+      <p className="text-white text-lg">No projects available.</p>
+    ) : (
+      visibleProjects.map((project, index) => (
+        <ProjectCard
+          key={project._id || index}
+          index={index}
+          {...project}
+          isAdmin={isAdmin}
+          onEdit={() => handleEdit(project)}
+          onDelete={() => handleDelete(project._id)}
+        />
+      ))
+    )}
+  </div>
+
+  {/* ✅ Load More Button */}
+  {visibleCount < filteredProjects.length && (
+    <div className="mt-10 flex justify-center items-center w-full z-50">
+      <button
+        onClick={() => setVisibleCount((prev) => prev + 6)}
+        className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl shadow-md transition-transform duration-300 hover:scale-105 z-50"
+      >
+        Load More
+      </button>
+    </div>
+  )}
+</div>
+
     </>
   );
 };
