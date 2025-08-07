@@ -8,8 +8,8 @@ const visitorSchema = new mongoose.Schema({
     region: String,
     city: String,
      isp: String,
-    lat: Number,
-    lon: Number,
+    lat: String,
+    lon: String,
   },
 
     deviceInfo: {

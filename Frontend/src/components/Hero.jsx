@@ -282,37 +282,125 @@ import baseurl from "./BaseUrl";
 
 
 const Hero = () => {
-  const [titles, setTitles] = useState([]);
+//   const [titles, setTitles] = useState([]);
+//   const [subheading, setSubheading] = useState("");
+//   const [inputTitles, setInputTitles] = useState("");
+//   const [inputSubheading, setInputSubheading] = useState("");
+//   const [isAdmin, setIsAdmin] = useState(false);
+//   const [showEditor, setShowEditor] = useState(false); // 👈 NEW
+
+//   const getAuthHeaders = () => {
+//   const token = localStorage.getItem("token");
+//   return { headers: { Authorization: `Bearer ${token}` } };
+// };
+
+//   useEffect(() => {
+//     const isAdminStored = localStorage.getItem("adminLoggedIn");
+//     if (isAdminStored === "true") setIsAdmin(true);
+//   }, []);
+
+//   useEffect(() => {
+//     axios.get(`${baseurl}hero/hero-text`, getAuthHeaders())
+//       .then((res) => {
+//         const data = res.data;
+//         setTitles(data.titles || []);
+//         setSubheading(data.subheading || "");
+//         setInputTitles((data.titles || []).join(", "));
+//         setInputSubheading(data.subheading || "");
+//       })
+//       .catch((err) => {
+//         console.error("Failed to load hero text", err);
+//       });
+//   }, []);
+
+//   useEffect(() => {
+//     if (titles.length > 0) {
+//       const typed = new Typed(".typing", {
+//         strings: titles,
+//         typeSpeed: 100,
+//         backSpeed: 60,
+//         loop: true,
+//       });
+//       return () => typed.destroy();
+//     }
+//   }, [titles]);
+
+//   const handleSave = () => {
+//     const payload = {
+//       titles: inputTitles.split(",").map((t) => t.trim()),
+//       subheading: inputSubheading,
+//     };
+//     axios.put(`${baseurl}hero/hero-text`, payload, getAuthHeaders())
+//       .then(() => {
+//         alert("Hero text updated successfully!");
+//         setTitles(payload.titles);
+//         setSubheading(payload.subheading);
+//         setShowEditor(false);
+//       })
+//       .catch((err) => {
+//         console.error("Update failed", err);
+//       });
+//   };
+
+//   const handleCreate = () => {
+//     const payload = {
+//       titles: inputTitles.split(",").map((t) => t.trim()),
+//       subheading: inputSubheading,
+//     };
+//     axios.post(`${baseurl}hero/hero-text`, payload, getAuthHeaders())
+//       .then(() => {
+//         alert("Hero text created!");
+//         setTitles(payload.titles);
+//         setSubheading(payload.subheading);
+//         setShowEditor(false);
+//       })
+//       .catch((err) => {
+//         console.error("Create failed", err);
+//       });
+//   };
+
+
+const [titles, setTitles] = useState([]);
   const [subheading, setSubheading] = useState("");
   const [inputTitles, setInputTitles] = useState("");
   const [inputSubheading, setInputSubheading] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
-  const [showEditor, setShowEditor] = useState(false); // 👈 NEW
+  const [showEditor, setShowEditor] = useState(false);
 
   const getAuthHeaders = () => {
-  const token = localStorage.getItem("token");
-  return { headers: { Authorization: `Bearer ${token}` } };
-};
+    const token = localStorage.getItem("token");
+    return { headers: { Authorization: `Bearer ${token}` } };
+  };
 
+  // Check if admin
   useEffect(() => {
     const isAdminStored = localStorage.getItem("adminLoggedIn");
     if (isAdminStored === "true") setIsAdmin(true);
   }, []);
 
+  // Fetch latest data initially + every 5 seconds
   useEffect(() => {
-    axios.get(`${baseurl}hero/hero-text`, getAuthHeaders())
-      .then((res) => {
-        const data = res.data;
-        setTitles(data.titles || []);
-        setSubheading(data.subheading || "");
-        setInputTitles((data.titles || []).join(", "));
-        setInputSubheading(data.subheading || "");
-      })
-      .catch((err) => {
-        console.error("Failed to load hero text", err);
-      });
+    const fetchHeroData = () => {
+      axios
+        .get(`${baseurl}hero/hero-text`)
+        .then((res) => {
+          const data = res.data;
+          setTitles(data.titles || []);
+          setSubheading(data.subheading || "");
+          setInputTitles((data.titles || []).join(", "));
+          setInputSubheading(data.subheading || "");
+        })
+        .catch((err) => {
+          console.error("Failed to load hero text", err);
+        });
+    };
+
+    fetchHeroData(); // initial fetch
+    const interval = setInterval(fetchHeroData, 5000); // every 5s
+    return () => clearInterval(interval);
   }, []);
 
+  // Typed effect
   useEffect(() => {
     if (titles.length > 0) {
       const typed = new Typed(".typing", {
@@ -325,12 +413,14 @@ const Hero = () => {
     }
   }, [titles]);
 
+  // Save handler
   const handleSave = () => {
     const payload = {
       titles: inputTitles.split(",").map((t) => t.trim()),
       subheading: inputSubheading,
     };
-    axios.put(`${baseurl}hero/hero-text`, payload, getAuthHeaders())
+    axios
+      .put(`${baseurl}hero/hero-text`, payload)
       .then(() => {
         alert("Hero text updated successfully!");
         setTitles(payload.titles);
@@ -342,12 +432,14 @@ const Hero = () => {
       });
   };
 
+  // Create handler
   const handleCreate = () => {
     const payload = {
       titles: inputTitles.split(",").map((t) => t.trim()),
       subheading: inputSubheading,
     };
-    axios.post(`${baseurl}hero/hero-text`, payload, getAuthHeaders())
+    axios
+      .post(`${baseurl}hero/hero-text`, payload)
       .then(() => {
         alert("Hero text created!");
         setTitles(payload.titles);
@@ -447,3 +539,184 @@ const Hero = () => {
 };
 
 export default Hero;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useEffect, useState } from "react";
+// import axios from "axios";
+// import Typed from "typed.js";
+
+// const Hero = () => {
+//   const baseurl = "http://localhost:5678/"; 
+
+//   const [titles, setTitles] = useState([]);
+//   const [subheading, setSubheading] = useState("");
+//   const [inputTitles, setInputTitles] = useState("");
+//   const [inputSubheading, setInputSubheading] = useState("");
+//   const [isAdmin, setIsAdmin] = useState(false);
+//   const [showEditor, setShowEditor] = useState(false);
+
+//   const getAuthHeaders = () => {
+//     const token = localStorage.getItem("token");
+//     return { headers: { Authorization: `Bearer ${token}` } };
+//   };
+
+//   // Check if admin
+//   useEffect(() => {
+//     const isAdminStored = localStorage.getItem("adminLoggedIn");
+//     if (isAdminStored === "true") setIsAdmin(true);
+//   }, []);
+
+//   // Fetch latest data initially + every 5 seconds
+//   useEffect(() => {
+//     const fetchHeroData = () => {
+//       axios
+//         .get(`${baseurl}hero/hero-text`, getAuthHeaders())
+//         .then((res) => {
+//           const data = res.data;
+//           setTitles(data.titles || []);
+//           setSubheading(data.subheading || "");
+//           setInputTitles((data.titles || []).join(", "));
+//           setInputSubheading(data.subheading || "");
+//         })
+//         .catch((err) => {
+//           console.error("Failed to load hero text", err);
+//         });
+//     };
+
+//     fetchHeroData(); // initial fetch
+//     const interval = setInterval(fetchHeroData, 5000); // every 5s
+//     return () => clearInterval(interval);
+//   }, []);
+
+//   // Typed effect
+//   useEffect(() => {
+//     if (titles.length > 0) {
+//       const typed = new Typed(".typing", {
+//         strings: titles,
+//         typeSpeed: 100,
+//         backSpeed: 60,
+//         loop: true,
+//       });
+//       return () => typed.destroy();
+//     }
+//   }, [titles]);
+
+//   // Save handler
+//   const handleSave = () => {
+//     const payload = {
+//       titles: inputTitles.split(",").map((t) => t.trim()),
+//       subheading: inputSubheading,
+//     };
+//     axios
+//       .put(`${baseurl}hero/hero-text`, payload, getAuthHeaders())
+//       .then(() => {
+//         alert("Hero text updated successfully!");
+//         setTitles(payload.titles);
+//         setSubheading(payload.subheading);
+//         setShowEditor(false);
+//       })
+//       .catch((err) => {
+//         console.error("Update failed", err);
+//       });
+//   };
+
+//   // Create handler
+//   const handleCreate = () => {
+//     const payload = {
+//       titles: inputTitles.split(",").map((t) => t.trim()),
+//       subheading: inputSubheading,
+//     };
+//     axios
+//       .post(`${baseurl}hero/hero-text`, payload, getAuthHeaders())
+//       .then(() => {
+//         alert("Hero text created!");
+//         setTitles(payload.titles);
+//         setSubheading(payload.subheading);
+//         setShowEditor(false);
+//       })
+//       .catch((err) => {
+//         console.error("Create failed", err);
+//       });
+//   };
+
+//   return (
+//     <div className="relative w-full h-screen mx-auto">
+//       <div className="absolute inset-0 top-[120px] max-w-7xl mx-auto px-6 flex flex-row items-start gap-5">
+//         <div className="flex flex-col justify-center items-center mt-5">
+//           <div className="w-5 h-5 rounded-full bg-[#915EFF]" />
+//           <div className="w-1 sm:h-80 h-40 violet-gradient" />
+//         </div>
+
+//         <div>
+//           <h1 className="text-white text-[60px] font-bold">
+//             Hi, I'm <span className="typing text-[#915EFF]"></span>
+//           </h1>
+//           <p className="text-white-100 mt-2 text-[20px]">{subheading}</p>
+//         </div>
+//       </div>
+
+//       {isAdmin && (
+//         <div className="absolute bottom-10 left-10 p-4 bg-black bg-opacity-50 rounded-lg">
+//           <button
+//             className="text-white bg-blue-500 px-4 py-2 rounded"
+//             onClick={() => setShowEditor(!showEditor)}
+//           >
+//             {showEditor ? "Close Editor" : "Edit Hero Text"}
+//           </button>
+
+//           {showEditor && (
+//             <div className="mt-4 text-white">
+//               <div>
+//                 <label>Titles (comma separated)</label>
+//                 <input
+//                   className="w-full p-2 mt-1 text-black"
+//                   value={inputTitles}
+//                   onChange={(e) => setInputTitles(e.target.value)}
+//                 />
+//               </div>
+//               <div className="mt-2">
+//                 <label>Subheading</label>
+//                 <input
+//                   className="w-full p-2 mt-1 text-black"
+//                   value={inputSubheading}
+//                   onChange={(e) => setInputSubheading(e.target.value)}
+//                 />
+//               </div>
+//               <div className="mt-4 flex gap-4">
+//                 <button
+//                   className="bg-green-500 px-4 py-2 rounded"
+//                   onClick={handleSave}
+//                 >
+//                   Update
+//                 </button>
+//                 <button
+//                   className="bg-yellow-500 px-4 py-2 rounded"
+//                   onClick={handleCreate}
+//                 >
+//                   Create New
+//                 </button>
+//               </div>
+//             </div>
+//           )}
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default Hero;

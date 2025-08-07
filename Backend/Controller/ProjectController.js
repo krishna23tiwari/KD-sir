@@ -6,6 +6,7 @@ const fs = require('fs')
 exports.getProjects = async (req, res) => {
   try {
     const projects = await Project.find();
+    // console.log(`>>>projects>>>`, projects)
     res.json(projects);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch projects" });

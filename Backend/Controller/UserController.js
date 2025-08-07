@@ -54,7 +54,7 @@ exports.login = async (req, res) => {
       return res.status(403).json({ message: "Access denied. Admins only." });
     }
 
-    const token = jwt.sign({email, role: user.role}, secret, {expiresIn: "24h"})
+    const token = jwt.sign({email, role: user.role}, secret, {expiresIn: "48h"})
 
     res.status(200).json({message: "Login successful", token, user: { email: user.email, role: user.role },});
   

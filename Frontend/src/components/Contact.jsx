@@ -157,7 +157,7 @@ const Contact = () => {
   const handleSendEmail = (e) => {
     e.preventDefault();
 
-    const email = "krishna23tiwari.kt@gmail.com";
+    const email = "ashutoshsinghal576@gmail.com";
     const subject = encodeURIComponent("Contact from Portfolio");
     const body = encodeURIComponent(message);
 
