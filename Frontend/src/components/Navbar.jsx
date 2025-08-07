@@ -155,7 +155,8 @@ const trackVisitor = async () => {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    localStorage.removeItem("adminLoggedIn"); 
+    localStorage.removeItem("adminLoggedIn");
+    localStorage.removeItem("token");  
     setEmail("");
     setPassword("");
     setIsMobileMenuOpen(false);

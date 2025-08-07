@@ -29,7 +29,7 @@ const ProjectCard = ({
   onEdit,
   onDelete,
 }) => {
-    const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const full = description;
   const preview = truncateWords(full, 10);
   const needsToggle = full.trim().split(/\s+/).length > 50;
@@ -38,7 +38,7 @@ const ProjectCard = ({
     <motion.div variants={fadeIn("up", "spring", index * 0.5, 0.75)}>
       <Tilt
         options={{ max: 45, scale: 1, speed: 450 }}
-        className="bg-tertiary p-5 rounded-2xl sm:w-[360px] w-full relative"
+        className="bg-tertiary p-5 rounded-2xl sm:w-[360px] w-full relative  z-10 pointer-events-auto"
       >
         {/* Project Image */}
         <a href={link} target="_blank" rel="noopener noreferrer">
@@ -65,7 +65,7 @@ const ProjectCard = ({
         <div className="mt-5">
           <h3 className="text-white font-bold text-[24px]">{name}</h3>
           {/* <p className="mt-2 text-secondary text-[14px]">{description}</p> */}
-                {/* <p className="mt-2 text-secondary text-[14px]">
+          {/* <p className="mt-2 text-secondary text-[14px]">
             {expanded ? full : preview}{" "}
             {needsToggle && (
               <button
@@ -78,84 +78,75 @@ const ProjectCard = ({
           </p> */}
 
           <p className="mt-2 text-secondary text-[14px] min-h-[80px]">
-  {expanded ? full : preview}{" "}
-  {needsToggle && (
-    <button
-      onClick={() => setExpanded((e) => !e)}
-      className="text-sm text-indigo-400 ml-1 underline"
-    >
-      {expanded ? "Show less" : "Read more"}
-    </button>
-  )}
-</p>
-
+            {expanded ? full : preview}{" "}
+            {needsToggle && (
+              <button
+                onClick={() => setExpanded((e) => !e)}
+                className="text-sm text-indigo-400 ml-1 underline"
+              >
+                {expanded ? "Show less" : "Read more"}
+              </button>
+            )}
+          </p>
         </div>
 
         {/* Tags */}
         <div className="mt-4 flex flex-wrap gap-2">
-          {(tags).map((tag, i) => (
+          {tags.map((tag, i) => (
             <p key={i} className={`text-[14px] ${tag.color}`}>
               #{tag.name}
             </p>
           ))}
         </div>
 
-       
-
         {isAdmin && (
-  <div className="mt-4 flex justify-end gap-2">
-    <button
-      className="bg-yellow-500 hover:bg-yellow-600 text-white p-1 rounded-full"
-      onClick={onEdit}
-      title="Edit Project"
-    >
-      <Pencil size={16} />
-    </button>
-    <button
-      className="bg-red-500 hover:bg-red-600 text-white p-1 rounded-full"
-      onClick={onDelete}
-      title="Delete Project"
-    >
-      <Trash2 size={16} />
-    </button>
-  </div>
-)}
-
+          <div className="mt-4 flex justify-end gap-2">
+            <button
+              className="bg-yellow-500 hover:bg-yellow-600 text-white p-1 rounded-full"
+              onClick={onEdit}
+              title="Edit Project"
+            >
+              <Pencil size={16} />
+            </button>
+            <button
+              className="bg-red-500 hover:bg-red-600 text-white p-1 rounded-full"
+              onClick={onDelete}
+              title="Delete Project"
+            >
+              <Trash2 size={16} />
+            </button>
+          </div>
+        )}
       </Tilt>
     </motion.div>
   );
 };
 
-
 const Works = () => {
   const [projects, setProjects] = useState([]);
   const [showForm, setShowForm] = useState(false);
-    const [formData, setFormData] = useState({
-      name: "",
-      description: "",
-      link: "",
-      source_code_link: "",
-      tags: "",
-      image: null,
-    });
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    link: "",
+    source_code_link: "",
+    tags: "",
+    image: null,
+  });
   const [isAdmin, setIsAdmin] = useState(false);
-  const [editId, setEditId] = useState(null); 
+  const [editId, setEditId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [visibleCount, setVisibleCount] = useState(6);
   const [searchQuery, setSearchQuery] = useState("");
 
-
-    const getAuthHeaders = () => {
+  const getAuthHeaders = () => {
     const token = localStorage.getItem("token");
     return { headers: { Authorization: `Bearer ${token}` } };
   };
-  
 
   useEffect(() => {
     fetchProjects();
 
-
-    
     const checkLocalStorage = () => {
       const isLoggedIn = localStorage.getItem("adminLoggedIn") === "true";
       setIsAdmin(isLoggedIn);
@@ -168,106 +159,101 @@ const Works = () => {
     return () => window.removeEventListener("storage", checkLocalStorage);
   }, []);
 
-
-
   const fetchProjects = async () => {
-  setLoading(true); // Start loading
-  try {
-    const res = await axios.get(`${baseurl}projects/getproject`);
-    setProjects(res.data);
-  } catch (err) {
-    console.error("Failed to load projects", err);
-  } finally {
-    setLoading(false); // End loading
-  }
-};
-
-
-  console.log(`>>>>>projects>>>`, projects)
-
-const handleAddProject = async (e) => {
-  e.preventDefault();
-
-  const tagsArray = formData.tags.split(",").map((tag) => ({
-    name: tag.trim(),
-    color: "text-green-400",
-  }));
-
-  const payload = new FormData();
-  payload.append("name", formData.name);
-  payload.append("description", formData.description);
-  payload.append("link", formData.link);
-  payload.append("source_code_link", formData.source_code_link);
-  payload.append("tags", JSON.stringify(tagsArray));
-  if (formData.image) {
-    payload.append("image", formData.image);
-  }
-
-
-  const config = {
-    headers: {
-      ...getAuthHeaders().headers,
-      "Content-Type": "multipart/form-data",
-    },
+    setLoading(true); // Start loading
+    try {
+      const res = await axios.get(`${baseurl}projects/getproject`);
+      setProjects(res.data);
+    } catch (err) {
+      console.error("Failed to load projects", err);
+    } finally {
+      setLoading(false); // End loading
+    }
   };
 
-  try {
-    if (editId) {
-      // Update
-      await axios.put(`${baseurl}projects/update/${editId}`, payload);
-      console.log("Project updated");
-    } else {
-      // Add
-      await axios.post(`${baseurl}projects/addproject`, payload);
-      console.log("Project added");
+  console.log(`>>>>>projects>>>`, projects);
+
+  const handleAddProject = async (e) => {
+    e.preventDefault();
+
+    const tagsArray = formData.tags.split(",").map((tag) => ({
+      name: tag.trim(),
+      color: "text-green-400",
+    }));
+
+    const payload = new FormData();
+    payload.append("name", formData.name);
+    payload.append("description", formData.description);
+    payload.append("link", formData.link);
+    payload.append("source_code_link", formData.source_code_link);
+    payload.append("tags", JSON.stringify(tagsArray));
+    if (formData.image) {
+      payload.append("image", formData.image);
     }
 
-    fetchProjects();
-    setShowForm(false);
-    setEditId(null);
-    setFormData({
-      name: "",
-      description: "",
-      link: "",
-      source_code_link: "",
-      tags: "",
-      image: null,
-    });
-  } catch (error) {
-    console.error("Error submitting project:", error);
-  }
-};
+    const config = {
+      headers: {
+        ...getAuthHeaders().headers,
+        "Content-Type": "multipart/form-data",
+      },
+    };
 
-const handleDelete = async (id) => {
-  if (window.confirm("Are you sure you want to delete this project?")) {
     try {
-      await axios.delete(`${baseurl}projects/delete/${id}`);
-      fetchProjects(); 
+      if (editId) {
+        // Update
+        await axios.put(`${baseurl}projects/update/${editId}`, payload);
+        console.log("Project updated");
+      } else {
+        // Add
+        await axios.post(`${baseurl}projects/addproject`, payload);
+        console.log("Project added");
+      }
+
+      fetchProjects();
+      setShowForm(false);
+      setEditId(null);
+      setFormData({
+        name: "",
+        description: "",
+        link: "",
+        source_code_link: "",
+        tags: "",
+        image: null,
+      });
     } catch (error) {
-      console.error("Error deleting project:", error);
+      console.error("Error submitting project:", error);
     }
-  }
-};
+  };
 
-const handleEdit = (project) => {
-  setShowForm(true);
-  setEditId(project._id); // Set ID for updating
-  setFormData({
-    name: project.name,
-    description: project.description,
-    link: project.link,
-    source_code_link: project.source_code_link,
-    tags: project.tags.map((tag) => tag.name).join(", "), // convert array to string
-    image: null, // Don't prefill image
-  });
-};
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this project?")) {
+      try {
+        await axios.delete(`${baseurl}projects/delete/${id}`);
+        fetchProjects();
+      } catch (error) {
+        console.error("Error deleting project:", error);
+      }
+    }
+  };
 
-const filteredProjects = projects.filter((project) =>
-  project.name.toLowerCase().includes(searchQuery.toLowerCase())
-);
-const visibleProjects = filteredProjects.slice(0, visibleCount);
+  const handleEdit = (project) => {
+    setShowForm(true);
+    setEditId(project._id); // Set ID for updating
+    setFormData({
+      name: project.name,
+      description: project.description,
+      link: project.link,
+      source_code_link: project.source_code_link,
+      tags: project.tags.map((tag) => tag.name).join(", "), // convert array to string
+      image: null, // Don't prefill image
+    });
+  };
 
-  
+  const filteredProjects = projects.filter((project) =>
+    project.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const visibleProjects = filteredProjects.slice(0, visibleCount);
+
   return (
     <>
       {/* <motion.div variants={textVariant()}>
@@ -283,30 +269,29 @@ const visibleProjects = filteredProjects.slice(0, visibleCount);
           Following projects showcase my skills and experience...
         </motion.p> */}
 
-        <motion.div variants={textVariant()} className="text-center">
-    <p className={`${styles.sectionSubText} text-center`}>My work</p>
-    <h2 className={`${styles.sectionHeadText} text-center`}>Projects.</h2>
-  </motion.div>
+      <motion.div variants={textVariant()} className="text-center">
+        <p className={`${styles.sectionSubText} text-center`}>My work</p>
+        <h2 className={`${styles.sectionHeadText} text-center`}>Projects.</h2>
+      </motion.div>
 
-  <div className="w-full flex justify-center">
-    <motion.p
-      variants={fadeIn("", "", 0.1, 1)}
-      className="mt-3 text-secondary text-[17px] max-w-3xl leading-[30px] text-center"
-    >
-      Following projects showcase my skills and experience...
-    </motion.p>
+      <div className="w-full flex justify-center">
+        <motion.p
+          variants={fadeIn("", "", 0.1, 1)}
+          className="mt-3 text-secondary text-[17px] max-w-3xl leading-[30px] text-center"
+        >
+          Following projects showcase my skills and experience...
+        </motion.p>
       </div>
 
       <div className="flex justify-center mt-8">
-  <input
-    type="text"
-    placeholder="Search projects..."
-    value={searchQuery}
-    onChange={(e) => setSearchQuery(e.target.value)}
-    className="p-3 rounded-lg w-full max-w-md bg-[#2a2a2a] text-white placeholder-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500"
-  />
-</div>
-
+        <input
+          type="text"
+          placeholder="Search projects..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="p-3 rounded-lg w-full max-w-md bg-[#2a2a2a] text-white placeholder-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500"
+        />
+      </div>
 
       {isAdmin && (
         <div className="my-8">
@@ -380,15 +365,13 @@ const visibleProjects = filteredProjects.slice(0, visibleCount);
                 }
                 className="p-3 rounded-lg bg-[#2a2a2a] text-white"
               />
-             
 
               <button
-  type="submit"
-  className="col-span-full bg-green-500 text-white py-2 px-6 rounded-lg hover:bg-green-600 transition"
->
-  {editId ? "Update Project" : "Submit Project"}
-</button>
-
+                type="submit"
+                className="col-span-full bg-green-500 text-white py-2 px-6 rounded-lg hover:bg-green-600 transition"
+              >
+                {editId ? "Update Project" : "Submit Project"}
+              </button>
             </form>
           )}
         </div>
@@ -432,38 +415,37 @@ const visibleProjects = filteredProjects.slice(0, visibleCount);
       </div> */}
 
       <div className="mt-20 flex flex-col items-center w-full">
-  <div className="flex flex-wrap justify-center gap-6 w-full">
-    {loading ? (
-      <p className="text-white text-lg">Loading projects...</p>
-    ) : visibleProjects.length === 0 ? (
-      <p className="text-white text-lg">No projects available.</p>
-    ) : (
-      visibleProjects.map((project, index) => (
-        <ProjectCard
-          key={project._id || index}
-          index={index}
-          {...project}
-          isAdmin={isAdmin}
-          onEdit={() => handleEdit(project)}
-          onDelete={() => handleDelete(project._id)}
-        />
-      ))
-    )}
-  </div>
+        <div className="flex flex-wrap justify-center gap-6 w-full">
+          {loading ? (
+            <p className="text-white text-lg">Loading projects...</p>
+          ) : visibleProjects.length === 0 ? (
+            <p className="text-white text-lg">No projects available.</p>
+          ) : (
+            visibleProjects.map((project, index) => (
+              <ProjectCard
+                key={project._id || index}
+                index={index}
+                {...project}
+                isAdmin={isAdmin}
+                onEdit={() => handleEdit(project)}
+                onDelete={() => handleDelete(project._id)}
+              />
+            ))
+          )}
+        </div>
 
-  {/* ✅ Load More Button */}
-  {visibleCount < filteredProjects.length && (
-    <div className="mt-10 flex justify-center items-center w-full z-50">
-      <button
-        onClick={() => setVisibleCount((prev) => prev + 6)}
-        className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl shadow-md transition-transform duration-300 hover:scale-105 z-50"
-      >
-        Load More
-      </button>
-    </div>
-  )}
-</div>
-
+        {/* ✅ Load More Button */}
+        {visibleCount < filteredProjects.length && (
+          <div className="mt-10 flex justify-center items-center w-full z-50">
+            <button
+              onClick={() => setVisibleCount((prev) => prev + 6)}
+              className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl shadow-md transition-transform duration-300 hover:scale-105 z-50"
+            >
+              Load More
+            </button>
+          </div>
+        )}
+      </div>
     </>
   );
 };
