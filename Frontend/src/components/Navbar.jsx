@@ -175,8 +175,8 @@ const trackVisitor = async () => {
       onClick={() => !isLoggedIn && setShowLogin(true)}
     >
       <p className="text-lg sm:text-xl font-bold">
-        Aushtosh
-        <span className="hidden sm:inline"> | AWS</span>
+        Ashutosh
+        <span className="hidden sm:inline"> </span>
       </p>
     </div>
 
