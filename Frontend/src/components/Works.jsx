@@ -205,7 +205,7 @@ const [totalPages, setTotalPages] = useState(1);
   setLoading(true);
 
   try {
-    const res = await axios.get(`projects/getproject?page=${pageNumber}&limit=6`);
+    const res = await axios.get(`${baseurl}projects/getproject?page=${pageNumber}&limit=6`);
     setProjects(res.data.projects);
     setTotalPages(res.data.totalPages);
     setPage(res.data.currentPage);
