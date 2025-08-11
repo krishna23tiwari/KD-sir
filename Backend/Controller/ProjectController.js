@@ -3,15 +3,15 @@ const{uploadFile} = require('../Utility/ImagesUpload')
 const fs = require('fs')
 
 
-exports.getProjects = async (req, res) => {
-  try {
-    const projects = await Project.find();
-    // console.log(`>>>projects>>>`, projects)
-    res.json(projects);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch projects" });
-  }
-};
+// exports.getProjects = async (req, res) => {
+//   try {
+//     const projects = await Project.find();
+//     // console.log(`>>>projects>>>`, projects)
+//     res.json(projects);
+//   } catch (err) {
+//     res.status(500).json({ error: "Failed to fetch projects" });
+//   }
+// };
 
 // exports.getProjects = async (req, res) => {
 //   try {
@@ -47,29 +47,29 @@ exports.getProjects = async (req, res) => {
 // };
 
 
-// exports.getProjects = async (req, res) => {
-//   try {
-//     let { page = 1, limit = 6 } = req.query;
-//     page = parseInt(page);
-//     limit = parseInt(limit);
+exports.getProjects = async (req, res) => {
+  try {
+    let { page = 1, limit = 6 } = req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
 
-//     const totalProjects = await Project.countDocuments();
-//     const totalPages = Math.ceil(totalProjects / limit);
+    const totalProjects = await Project.countDocuments();
+    const totalPages = Math.ceil(totalProjects / limit);
 
-//     const projects = await Project.find()
-//       .skip((page - 1) * limit)
-//       .limit(limit);
+    const projects = await Project.find()
+      .skip((page - 1) * limit)
+      .limit(limit);
 
-//     res.json({
-//       totalProjects,
-//       totalPages,
-//       currentPage: page,
-//       projects
-//     });
-//   } catch (err) {
-//     res.status(500).json({ error: "Failed to fetch projects" });
-//   }
-// };
+    res.json({
+      totalProjects,
+      totalPages,
+      currentPage: page,
+      projects
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch projects" });
+  }
+};
 
 
 
