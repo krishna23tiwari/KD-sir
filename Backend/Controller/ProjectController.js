@@ -3,15 +3,75 @@ const{uploadFile} = require('../Utility/ImagesUpload')
 const fs = require('fs')
 
 
+// exports.getProjects = async (req, res) => {
+//   try {
+//     const projects = await Project.find();
+//     // console.log(`>>>projects>>>`, projects)
+//     res.json(projects);
+//   } catch (err) {
+//     res.status(500).json({ error: "Failed to fetch projects" });
+//   }
+// };
+
+// exports.getProjects = async (req, res) => {
+//   try {
+//     // Extract page & limit from query params (default: page=1, limit=6)
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = parseInt(req.query.limit) || 6;
+
+//     // Calculate skip value
+//     const skip = (page - 1) * limit;
+
+//     // Get total number of documents
+//     const totalProjects = await Project.countDocuments();
+
+//     // Fetch paginated projects
+//     const projects = await Project.find()
+//       .skip(skip)
+//       .limit(limit)
+//       .sort({ createdAt: -1 }); // Optional: newest first
+
+//     // Calculate total pages
+//     const totalPages = Math.ceil(totalProjects / limit);
+
+//     res.json({
+//       data: projects,
+//       currentPage: page,
+//       totalPages,
+//       totalProjects
+//     });
+//   } catch (err) {
+//     console.error("Pagination Error:", err);
+//     res.status(500).json({ error: "Failed to fetch projects" });
+//   }
+// };
+
+
 exports.getProjects = async (req, res) => {
   try {
-    const projects = await Project.find();
-    // console.log(`>>>projects>>>`, projects)
-    res.json(projects);
+    let { page = 1, limit = 6 } = req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
+
+    const totalProjects = await Project.countDocuments();
+    const totalPages = Math.ceil(totalProjects / limit);
+
+    const projects = await Project.find()
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    res.json({
+      totalProjects,
+      totalPages,
+      currentPage: page,
+      projects
+    });
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch projects" });
   }
 };
+
+
 
 
 exports.addProject = async (req, res) => {
