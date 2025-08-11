@@ -295,6 +295,24 @@ const [totalPages, setTotalPages] = useState(1);
     });
   };
 
+  const scrollToProjects = () => {
+  const section = document.getElementById('projects-section');
+  if (section) {
+    section.scrollIntoView({ behavior: 'smooth' });
+  }
+};
+
+  const handleNext = () => {
+  setPage(page + 1);
+  scrollToProjects()
+};
+
+const handlePrevious = () => {
+  setPage(page - 1);
+scrollToProjects()
+};
+
+
   const filteredProjects = projects.filter((project) =>
     project.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -414,8 +432,8 @@ const [totalPages, setTotalPages] = useState(1);
 
      
 
-      <div className="mt-20 flex flex-col items-center w-full">
-        <div className="flex flex-wrap justify-center gap-6 w-full">
+      <div id="projects-section" className="mt-20 flex flex-col items-center w-full">
+        <div className="flex flex-wrap justify-center gap-6 w-full z-0">
           {loading ? (
             <p className="text-white text-lg">Loading projects...</p>
           ) : visibleProjects.length === 0 ? (
@@ -461,8 +479,8 @@ const [totalPages, setTotalPages] = useState(1);
   </div>
 )} */}
 
-{page < totalPages && (
-  <div className="mt-10 flex justify-center items-center">
+{/* {page < totalPages && (
+  <div className="mt-10 flex justify-center items-center relative z-50">
     <button
       onClick={() => setPage(page + 1)}
       className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl shadow-md transition-transform duration-300 hover:scale-105"
@@ -470,10 +488,10 @@ const [totalPages, setTotalPages] = useState(1);
       Next
     </button>
   </div>
-)}
+)} */}
 
-{page > 1 && (
-  <div className="mt-4 flex justify-center items-center">
+{/* {page > 1 && (
+  <div className="mt-4 flex justify-center items-center relative z-50">
     <button
       onClick={() => setPage(page - 1)}
       className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-xl shadow-md transition-transform duration-300 hover:scale-105"
@@ -481,7 +499,28 @@ const [totalPages, setTotalPages] = useState(1);
       Previous
     </button>
   </div>
-)}
+)} */}
+
+<div className="mt-10 flex justify-center items-center gap-4 relative z-50">
+  {page > 1 && (
+    <button
+      onClick={handlePrevious}
+      className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-xl shadow-md transition-transform duration-300 hover:scale-105"
+    >
+      Previous
+    </button>
+  )}
+
+  {page < totalPages && (
+    <button
+      onClick={handleNext}
+      className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl shadow-md transition-transform duration-300 hover:scale-105"
+    >
+      Next
+    </button>
+  )}
+</div>
+
 
 
       </div>
