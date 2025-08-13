@@ -3,6 +3,7 @@ const router = express.Router();
 const projectcontroller = require("../Controller/ProjectController");
 // const auth = require('../MiddleWare/Auth')
 
+router.get("/getAllprojects", projectcontroller.getAllProjects);
 
 router.get("/getproject", projectcontroller.getProjects);
 
