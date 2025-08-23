@@ -4,7 +4,7 @@ import Tilt from "react-parallax-tilt";
 import { motion } from "framer-motion";
 
 import { styles } from "../styles";
-// import { services } from "../constants";
+import { services } from "../constants";
 import { SectionWrapper } from "../hoc";
 import { fadeIn, textVariant } from "../utils/motion";
 import ComputersCanvas from './canvas/Computers';
@@ -74,11 +74,11 @@ Organizations use AWS for hosting websites, running enterprise applications, big
 </motion.div>
 
         
-      {/* <div className='mt-20 flex flex-wrap gap-10'>
+      <div className='mt-20 flex flex-wrap gap-10'>
         {services.map((service, index) => (
           <ServiceCard key={service.title} index={index} {...service} />
         ))}
-      </div> */}
+      </div>
     </>
   );
 };
