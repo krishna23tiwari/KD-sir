@@ -33,6 +33,7 @@ const projectroute = require('./Router/ProjectRouter')
 const heroroute = require('./Router/HeroTextRoute')
 const AboutRoute = require('./Router/AboutRouter')
 const urlRoute = require('./Router/UrlRouter')
+const experienceRoute = require('./Router/ExperienceRouter')
 
 // app.use('/visitor', visitors)
 app.use('/user', userroute)
@@ -40,6 +41,7 @@ app.use('/projects', projectroute)
 app.use('/hero', heroroute)
 app.use('/about', AboutRoute)
 app.use('/url', urlRoute)
+app.use('/experience',experienceRoute)
 
 scheduleVisitorReset();
 

@@ -64,18 +64,7 @@ const ProjectCard = ({
         {/* Project Details */}
         <div className="mt-5">
           <h3 className="text-white font-bold text-[24px]">{name}</h3>
-          {/* <p className="mt-2 text-secondary text-[14px]">{description}</p> */}
-          {/* <p className="mt-2 text-secondary text-[14px]">
-            {expanded ? full : preview}{" "}
-            {needsToggle && (
-              <button
-                onClick={() => setExpanded((e) => !e)}
-                className="text-sm text-indigo-400 ml-1 underline"
-              >
-                {expanded ? "Show less" : "Read more"}
-              </button>
-            )}
-          </p> */}
+  
 
           <p className="mt-2 text-secondary text-[14px] min-h-[80px]">
             {expanded ? full : preview}{" "}
@@ -175,43 +164,7 @@ const [totalPages, setTotalPages] = useState(1);
     
   }
 
-  // const fetchProjects = async () => {
-  //   setLoading(true); // Start loading
-  //   try {
-  //     const res = await axios.get(`${baseurl}projects/getproject`);
-  //     setProjects(res.data);
-  //   } catch (err) {
-  //     console.error("Failed to load projects", err);
-  //   } finally {
-  //     setLoading(false); // End loading
-  //   }
-  // };
 
-//   const fetchProjects = async (pageNumber) => {
-//   try {
-//     const res = await axios.get(`/projects?page=${pageNumber}&limit=6`);
-//     if (pageNumber === 1) {
-//       // First page → Replace
-//       setProjects(res.data.data);
-//     } else {
-//       // Load More → Append
-//       setProjects((prev) => [...prev, ...res.data.data]);
-//     }
-//     setTotalPages(res.data.totalPages);
-//   } catch (err) {
-//     console.error("Error fetching projects:", err);
-//   }
-// };
-
-
-  // const fetchProjects = async (pageNumber) => {
-  //   setLoading(true);
-    
-  //   const res = await axios.get(`/projects?page=${pageNumber}&limit=6`);
-  //   setProjects(res.data.projects);
-  //   setTotalPages(res.data.totalPages);
-  //   setPage(res.data.currentPage);
-  // };
 
   const fetchProjects = async (pageNumber) => {
   setLoading(true);
@@ -459,100 +412,6 @@ const visibleProjects =
         </div>
       )}
 
-     
-
-      {/* <div id="projects-section" className="mt-20 flex flex-col items-center w-full">
-        <div className="flex flex-wrap justify-center gap-6 w-full z-0">
-          {loading ? (
-            <p className="text-white text-lg">Loading projects...</p>
-          ) : visibleProjects.length === 0 ? (
-            <p className="text-white text-lg">No projects available.</p>
-          ) : (
-            visibleProjects.map((project, index) => (
-              <ProjectCard
-                key={project._id || index}
-                index={index}
-                {...project}
-                isAdmin={isAdmin}
-                onEdit={() => handleEdit(project)}
-                onDelete={() => handleDelete(project._id)}
-              />
-            ))
-          )}
-        </div> */}
-
-        {/* ✅ Load More Button */}
-        {/* {visibleCount < filteredProjects.length && (
-          <div className="mt-10 flex justify-center items-center w-full z-50">
-            <button
-              onClick={() => setVisibleCount((prev) => prev + 6)}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl shadow-md transition-transform duration-300 hover:scale-105 z-50"
-            >
-              Load More
-            </button>
-          </div>
-        )} */}
-
-        {/* {page < totalPages && (
-  <div className="mt-10 pl-4 flex justify-center items-center">
-    <button
-      onClick={() => {
-        const nextPage = page + 1;
-        fetchProjects(nextPage);
-        setPage(nextPage);
-      }}
-      className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl shadow-md transition-transform duration-300 hover:scale-105"
-    >
-      Load More
-    </button>
-  </div>
-)} */}
-
-{/* {page < totalPages && (
-  <div className="mt-10 flex justify-center items-center relative z-50">
-    <button
-      onClick={() => setPage(page + 1)}
-      className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl shadow-md transition-transform duration-300 hover:scale-105"
-    >
-      Next
-    </button>
-  </div>
-)} */}
-
-{/* {page > 1 && (
-  <div className="mt-4 flex justify-center items-center relative z-50">
-    <button
-      onClick={() => setPage(page - 1)}
-      className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-xl shadow-md transition-transform duration-300 hover:scale-105"
-    >
-      Previous
-    </button>
-  </div>
-)} */}
-
-{/* <div className="mt-10 flex justify-center items-center gap-4 relative z-50">
-  {page > 1 && (
-    <button
-      onClick={handlePrevious}
-      className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-xl shadow-md transition-transform duration-300 hover:scale-105"
-    >
-      Previous
-    </button>
-  )}
-
-  {page < totalPages && (
-    <button
-      onClick={handleNext}
-      className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl shadow-md transition-transform duration-300 hover:scale-105"
-    >
-      Next
-    </button>
-  )}
-</div>
-
-
-
-      </div> */}
 
       <div id="projects-section" className="mt-20 flex flex-col items-center w-full">
   <div className="flex flex-wrap justify-center gap-6 w-full z-0">
