@@ -10,6 +10,37 @@ const Navbar = ({ heroRef, contactRef, experienceRef, projectsRef }) => {
   const [password, setPassword] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+   const [resumeLink, setResumeLink] = useState("");
+  const [newResume, setNewResume] = useState("");
+
+    const fetchResume = async () => {
+    try {
+      const res = await axios.get(`${baseurl}user/getResume`);
+      setResumeLink(res.data?.resumelink || "");
+      setNewResume(res.data.resumelink || "")
+    } catch (err) {
+      console.error("Error fetching resume:", err);
+    }
+  };
+
+    const updateResume = async () => {
+    try {
+      
+      const res = await axios.put(
+        `${baseurl}user/resumelink`,
+        { resumelink: newResume || resumeLink },
+
+      );
+      setResumeLink(res.data?.resumelink || newResume || resumeLink);
+      setNewResume("");
+      alert("Resume link updated!");
+    } catch (err) {
+      alert("Failed to update resume link.");
+    }
+  };
+
+
+
   const scrollToHero = () => {
     heroRef?.current?.scrollIntoView({ behavior: "smooth" });
     setIsMobileMenuOpen(false);
@@ -34,11 +65,27 @@ const Navbar = ({ heroRef, contactRef, experienceRef, projectsRef }) => {
   };
 
   
-  const resumeLink = "https://workspace.google.com/intl/en_in/";
+  // const resumeLink = "https://workspace.google.com/intl/en_in/";
   
   const openResume = () => {
-    window.open(resumeLink, "_blank");
+    // window.open(resumeLink, "_blank");
+        if (resumeLink) {
+      window.open(resumeLink, "_blank");
+    } else {
+      alert("Resume not available.");
+    }
   };
+
+useEffect(() => {
+  fetchResume();
+}, []);
+
+useEffect(() => {
+  if (isLoggedIn) {
+    fetchResume();
+  }
+}, [isLoggedIn]);
+
 
   useEffect(() => {
     const storedUser = localStorage.getItem("adminLoggedIn");
@@ -117,12 +164,32 @@ const Navbar = ({ heroRef, contactRef, experienceRef, projectsRef }) => {
             Contact
           </li>
          
-          <button 
-      onClick={openResume} 
-      className="cursor-pointer hover:text-gray-300"
-    >
-      Resume
-    </button>
+   
+
+          <li className="cursor-pointer hover:text-gray-300">
+  {!isLoggedIn ? (
+    
+    <span onClick={openResume}>Resume</span>
+  ) : (
+    
+    <div className="flex items-center gap-2">
+      <input
+        type="text"
+        placeholder="Enter resume link"
+        value={newResume}
+        onChange={(e) => setNewResume(e.target.value)}
+        className="px-2 py-1 text-black rounded-md"
+      />
+      <button
+        onClick={updateResume}
+        className="bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded-md"
+      >
+        Save
+      </button>
+    </div>
+  )}
+</li>
+
 
           {isLoggedIn && (
             <li
@@ -135,7 +202,7 @@ const Navbar = ({ heroRef, contactRef, experienceRef, projectsRef }) => {
         </ul>
       </div>
 
-      {/* Mobile Menu */}
+      
       {isMobileMenuOpen && (
         <ul className="sm:hidden bg-gray-900 px-6 py-4 space-y-4 text-sm">
           <li onClick={scrollToHero} className="cursor-pointer hover:text-gray-300">
@@ -151,9 +218,38 @@ const Navbar = ({ heroRef, contactRef, experienceRef, projectsRef }) => {
             Contact
           </li>
 
-          <li onClick={scrollToContact} className="cursor-pointer hover:text-gray-300">
+          {/* <li onClick={scrollToContact} className="cursor-pointer hover:text-gray-300">
             Resume
-          </li>
+          </li> */}
+
+             {/* <li onClick={openResume} className="cursor-pointer hover:text-gray-300">
+            Resume
+          </li> */}
+
+
+          <li className="cursor-pointer hover:text-gray-300">
+  {!isLoggedIn ? (
+    
+    <span onClick={openResume}>Resume</span>
+  ) : (
+    
+    <div className="flex items-center gap-2">
+      <input
+        type="text"
+        placeholder="Enter resume link"
+        value={newResume}
+        onChange={(e) => setNewResume(e.target.value)}
+        className="px-2 py-1 text-black rounded-md"
+      />
+      <button
+        onClick={updateResume}
+        className="bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded-md"
+      >
+        Save
+      </button>
+    </div>
+  )}
+</li>
 
           {isLoggedIn && (
             <li

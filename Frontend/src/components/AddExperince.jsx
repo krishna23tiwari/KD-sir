@@ -52,61 +52,7 @@ const AddExperience = ({ onSave, editingExp, clearEdit }) => {
     setExperience({ ...experience, points: newPoints });
   };
 
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
 
-//     try {
-//       const formData = new FormData();
-//       formData.append("title", experience.title);
-//       formData.append("company_name", experience.company_name);
-//       formData.append("iconBg", experience.iconBg || "#000000");
-//       formData.append(
-//         "date",
-//         experience.isPresent
-//           ? `${experience.startDate} - Present`
-//           : `${experience.startDate} - ${experience.endDate}`
-//       );
-//       formData.append("link", experience.link);
-//       formData.append(
-//         "points",
-//         JSON.stringify(experience.points.filter((p) => p.trim() !== ""))
-//       );
-
-//       if (experience.icon) {
-//         formData.append("icon", experience.icon);
-//       }
-
-//       const res = await axios.post(
-//         `${baseurl}experience/saveexperience`,
-//         formData,
-//         { headers: { "Content-Type": "multipart/form-data" } }
-//       );
-
-//       if (res.status === 201) {
-//         alert("Experience saved successfully!");
-//         onSave && onSave(res.data.experience);
-
-//         setExperience({
-//           title: "",
-//           company_name: "",
-//           icon: "",
-//           iconBg: "#000000",
-//           startDate: "",
-//           endDate: "",
-//           isPresent: false,
-//           link: "",
-//           points: [""],
-//         });
-//         setShowForm(false); // hide form after saving
-//       }
-//     } catch (err) {
-//       console.error("Save error:", err.response?.data || err.message);
-//       alert("Error saving experience!");
-//     }
-//   };
-
-  // ✅ Check if admin is logged in
-  
   const handleSubmit = async (e) => {
   e.preventDefault();
   try {
@@ -175,7 +121,7 @@ const AddExperience = ({ onSave, editingExp, clearEdit }) => {
 
   const isAdmin = localStorage.getItem("adminLoggedIn") === "true";
 
-  if (!isAdmin) return null; // 🔒 if not admin, show nothing
+  if (!isAdmin) return null; 
 
 
 
@@ -300,12 +246,7 @@ const AddExperience = ({ onSave, editingExp, clearEdit }) => {
           </div>
 
           <div className="flex gap-2 mt-3">
-            {/* <button
-              type="submit"
-              className="bg-green-600 flex-1 py-2 rounded font-bold"
-            >
-              Save Experience
-            </button> */}
+           
 
             <button
   type="submit"

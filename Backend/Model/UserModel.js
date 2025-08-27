@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ["user", "admin"],
     default: "user"
+  },
+
+  resumelink :{
+    type : String
   }
 }, {
   timestamps: true, versionKey : false

@@ -63,3 +63,43 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+exports.updateResumeLink = async (req, res) => {
+  const { resumelink } = req.body;
+
+  try {
+    const user = await User.findOneAndUpdate(
+      { role: "admin" },   // find the admin instead of using email
+      { resumelink },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    res.status(200).json({ message: "Resume link updated successfully", resumelink: user.resumelink });
+  } catch (err) {
+    console.error("Update Resume Error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
+exports.getResume = async (req, res) => {
+  try {
+
+    const user = await User.findOne({ role: "admin" }).select("resumelink");
+
+    if (!user || !user.resumelink) {
+      return res.status(404).json({ message: "Resume not found" });
+    }
+
+    res.status(200).json({ resumelink: user.resumelink });
+  } catch (err) {
+    console.error("Get Resume Error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};

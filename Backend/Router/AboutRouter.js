@@ -3,7 +3,8 @@ const router = express.Router();
 const controller = require("../Controller/AboutController");
 // const auth = require("../MiddleWare/Auth");
 
-router.get("/",  controller.getAboutInfo);
-router.put("/",  controller.createOrUpdateAbout);
+router.post('/saveintro', controller.saveintro)
+router.get('/showintro', controller.showintro)
+router.put('/editintro/:id', controller.editintro)
 
 module.exports = router;
