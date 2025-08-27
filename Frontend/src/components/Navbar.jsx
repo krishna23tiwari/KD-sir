@@ -64,11 +64,10 @@ const Navbar = ({ heroRef, contactRef, experienceRef, projectsRef }) => {
     setIsMobileMenuOpen(false);
   };
 
-  
-  // const resumeLink = "https://workspace.google.com/intl/en_in/";
+
   
   const openResume = () => {
-    // window.open(resumeLink, "_blank");
+    
         if (resumeLink) {
       window.open(resumeLink, "_blank");
     } else {
@@ -139,7 +138,7 @@ useEffect(() => {
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => !isLoggedIn && setShowLogin(true)}
         >
-          <p className="text-lg sm:text-xl font-bold">Ashutosh</p>
+          <p className="text-lg sm:text-xl font-bold">Kuldeep</p>
         </div>
 
         {/* Hamburger Icon */}
@@ -218,13 +217,7 @@ useEffect(() => {
             Contact
           </li>
 
-          {/* <li onClick={scrollToContact} className="cursor-pointer hover:text-gray-300">
-            Resume
-          </li> */}
-
-             {/* <li onClick={openResume} className="cursor-pointer hover:text-gray-300">
-            Resume
-          </li> */}
+      
 
 
           <li className="cursor-pointer hover:text-gray-300">

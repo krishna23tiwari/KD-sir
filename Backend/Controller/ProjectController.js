@@ -13,43 +13,10 @@ exports.getAllProjects = async (req, res) => {
   }
 };
 
-// exports.getProjects = async (req, res) => {
-//   try {
-//     // Extract page & limit from query params (default: page=1, limit=6)
-//     const page = parseInt(req.query.page) || 1;
-//     const limit = parseInt(req.query.limit) || 6;
-
-//     // Calculate skip value
-//     const skip = (page - 1) * limit;
-
-//     // Get total number of documents
-//     const totalProjects = await Project.countDocuments();
-
-//     // Fetch paginated projects
-//     const projects = await Project.find()
-//       .skip(skip)
-//       .limit(limit)
-//       .sort({ createdAt: -1 }); // Optional: newest first
-
-//     // Calculate total pages
-//     const totalPages = Math.ceil(totalProjects / limit);
-
-//     res.json({
-//       data: projects,
-//       currentPage: page,
-//       totalPages,
-//       totalProjects
-//     });
-//   } catch (err) {
-//     console.error("Pagination Error:", err);
-//     res.status(500).json({ error: "Failed to fetch projects" });
-//   }
-// };
-
 
 exports.getProjects = async (req, res) => {
   try {
-    let { page = 1, limit = 6 } = req.query;
+    let { page = 1, limit = 3 } = req.query;
     page = parseInt(page);
     limit = parseInt(limit);
 
